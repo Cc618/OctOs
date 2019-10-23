@@ -19,9 +19,10 @@
 KERNEL_START = 0x1000
 
 # Cross Compilers
-TOOL_ASM = nasm
-TOOL_C = /mnt/data/donnees/linux/logiciels/i386-elf-9.1.0/bin/i386-elf-gcc
-TOOL_LINK = /mnt/data/donnees/linux/logiciels/i386-elf-9.1.0/bin/i386-elf-ld
+TOOL_ASM ?= nasm
+TOOL_PY ?= python3
+TOOL_C ?= /mnt/data/donnees/linux/logiciels/i386-elf-9.1.0/bin/i386-elf-gcc
+TOOL_LINK ?= /mnt/data/donnees/linux/logiciels/i386-elf-9.1.0/bin/i386-elf-ld
 
 # Flags
 FLAG_ASM = -i src/boot
@@ -40,6 +41,7 @@ SRC_BOOT = src/boot/boot.asm
 SRC_ENTRY = src/kernel/entry.asm
 
 FILE_BOOT = tmp/boot/boot
+FILE_BOOT_SUFFIX = tmp/boot/suffix
 FILE_ENTRY = tmp/kernel/entry.o
 FILE_KERNEL = tmp/kernel/kernel
 
@@ -51,26 +53,28 @@ FILE_KERNEL = tmp/kernel/kernel
 
 
 # OS #
-bin/os: bin $(FILE_BOOT) $(FILE_KERNEL)
-	cat $(FILE_BOOT) $(FILE_KERNEL) > bin/os
+bin/os: bin $(FILE_BOOT) $(FILE_BOOT_SUFFIX) $(FILE_KERNEL)
+	cat $(FILE_BOOT) $(FILE_BOOT_SUFFIX) $(FILE_KERNEL) > bin/os
 
 run: bin/os
 	qemu-system-i386 -drive format=raw,if=floppy,index=0,file=bin/os
 
 
 # Boot #
-$(FILE_BOOT): tmp/boot $(SRC_BOOT)
+$(FILE_BOOT): tmp/boot $(SRC_BOOT) src/boot/constants.inc src/boot/gdt.inc
 	$(TOOL_ASM) $(FLAG_ASM) -f bin -o $(FILE_BOOT) $(SRC_BOOT)
+
+$(FILE_BOOT_SUFFIX): tmp/boot
+	$(TOOL_PY) utils/boot_suffix.py $(FILE_BOOT) > $(FILE_BOOT_SUFFIX)
 
 
 # Kernel #
 # Kernel (link objects)
-# TODO : Create variable for all objects
 $(FILE_KERNEL): $(OBJ)
 	$(TOOL_LINK) $(FLAG_LINK) -o $(FILE_KERNEL) $^
 
 # Entry
-$(FILE_ENTRY): tmp/kernel $(SRC_ENTRY)
+$(FILE_ENTRY): tmp/kernel $(SRC_ENTRY) src/boot/constants.inc
 	$(TOOL_ASM) $(FLAG_ASM) -f elf -o $(FILE_ENTRY) $(SRC_ENTRY)
 
 # C

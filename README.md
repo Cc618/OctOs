@@ -4,8 +4,9 @@ An OS created in October. This OS is 32 bits, provides a heap and a command line
 ## Features
 - Pure bootloader (no GRUB).
 - 32 bits, protected mode.
-- (WIP) Heap.
 - (WIP) Command line interface.
+- (WIP) Heap.
+- (WIP) Commands.
 
 ## Architecture
 - utils : Some scripts.
@@ -34,6 +35,7 @@ $ make clean
 ## Depedencies
 To build the OS you must have :
 - nasm : Assembly sources.
+- python3 : Scripts in the utils folder.
 - cc (for i386, provided with GCC) : For C sources.
 - ld (for i386, provided with GCC) : To link object files.
 

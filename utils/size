@@ -1,5 +1,0 @@
-#!/bin/sh
-
-# Used to get the size in bytes of a file
-
-ls -nl $1 | awk '{print $5}'
