@@ -8,6 +8,7 @@ An OS created in October. This OS is 32 bits, provides a heap and a command line
 - (WIP) Command line interface.
 
 ## Architecture
+- utils : Some scripts.
 - src : Source files.
 - src/boot : Boot source files (Assembly).
 - src/kernel : Kernel source files (C).

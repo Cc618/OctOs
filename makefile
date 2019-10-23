@@ -13,6 +13,7 @@
 # 4. Link all objects
 # 5. Concatenates all files in one binary image (bin/os)
 
+
 # Tools #
 # Constants
 KERNEL_START = 0x1000
