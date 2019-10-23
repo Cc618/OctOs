@@ -3,8 +3,12 @@
 ; Where to load the kernel (must be a 16 multiple)
 %define KERNEL_OFFSET 0x1000
 
+; The address of the main function
+%define KERNEL_ENTRY (KERNEL_OFFSET + 0x200)
+
 ; The address of the stack highest (first) address
-%define STACK_HIGH 0xA000
+%define KERNEL_STACK_HIGH 0x90000
+%define BOOT_STACK_HIGH 0xA000
 
 ; The magic number we check to verify that the kernel
 ; is successfully loaded
@@ -14,4 +18,3 @@
 ; TODO : Auto set this variable
 ; How many
 %define LOAD_SECTORS_COUNT 1
-

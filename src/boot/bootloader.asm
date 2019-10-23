@@ -4,20 +4,21 @@
 [org 0x7C00]
 [bits 16]
 
-%include "constants.inc" 
+%include "constants.inc"
 
 
-; --- Boot --- ;
+; Main function
 _bootloaderMain:
-	; --------- Init -------- ;
-	; Default values
+	; - Init - ;
+	; Default drive id
 	mov byte [defaultDrive], dl
 
-	; --------- Stack -------- ;
-	mov bp, STACK_HIGH
+	; - Stack - ;
+	; Setup stack
+	mov bp, BOOT_STACK_HIGH
 	mov sp, bp
 
-	; --------- Loading -------- ;
+	; - Loading - ;
 	; Loading kernel...
 	mov si, STR_LOAD
 	call print
@@ -34,7 +35,7 @@ _bootloaderMain:
 	mov si, STR_ERROR_LOAD_CHECK
 	call print
 
-	jmp $
+	jmp end
 
 
 	.kernel_loaded:
@@ -45,24 +46,26 @@ _bootloaderMain:
 	; Jump to boot (2 bytes later to avoid magic word)
 	call KERNEL_OFFSET + 2
 
-	; Check exit code ;
+	; Check exit code
 	cmp ax, 0
 	je end
 
 
-	.fatal_error:
+	fatal_error:
 	; Fatal error
 	mov si, STR_ERROR_FATAL
 	call print
 	jmp $
+
 
 	end:
 	jmp $
 
 
 
-; ---------------- Functions ---------------- ;
-;   Prints with the BIOS the null terminated string pointed by si
+; --- Functions --- ;
+; Prints with the BIOS the null terminated string pointed by si
+; - si : Address of the string to print
 ; * Adds also a line feed
 print:
 	push ax
@@ -70,7 +73,7 @@ print:
 	; For the BIOS print function
 	mov ah, 0x0E
 
-	; ---- Loop ---- ;
+	; - Loop - ;
 	.loop:
 		; Retrieve the char pointed by si in al
 		mov al, [si]
@@ -88,7 +91,7 @@ print:
 
 	.loop_end:
 
-	; ---- Line feed (CRLF) ---- ;
+	; - Line feed (CRLF) - ;
 	mov al, 0xD
 	int 10h
 	mov al, 0xA
@@ -99,16 +102,15 @@ print:
 	ret
 
 
-
-
-;	Loads the kernel
+; Loads the kernel
 loadKernel:
 	pusha
 
-	; Clear carry flag
+	; Clear carry flag (set to no errors)
 	clc
 
-	; Set destination to just near the boot location (es:bx)
+	; - Load kernel - ;
+	; Set kernel location (es:bx)
 	mov bx, (KERNEL_OFFSET >> 4)
 	mov es, bx
 	xor bx, bx
@@ -116,43 +118,44 @@ loadKernel:
 	; Set the sectors to read number
 	mov al, LOAD_SECTORS_COUNT
 
-	; Cylinder
+	; Cylinder (0)
 	xor ch, ch
 
 	; Sector 2 (the boot is the sector 1)
 	mov cl, 2
 
-	; Head
+	; Head (0)
 	xor dh, dh
 
-	; Drive
+	; Drive, same drive as when we have booted
 	mov dl, [defaultDrive]
 
-	; Read function
+	; Call read function
 	mov ah, 0x02
 	int 13h
 
-	; Check errors
+	; - Check errors - ;
 	; Carry flag error = can't read
-	jnc .loading_noErrorRead
+	jnc .noErrorRead
 
+	; Cannot load kernel (read)
 	mov si, STR_ERROR_LOAD_READ
 	call print
 	jmp end
 
-
-	.loading_noErrorRead:
+	.noErrorRead:
 	; al is the number of sectors read
 	cmp al, LOAD_SECTORS_COUNT
-	je .loading_noErrorSector
+	je .noErrorSector
 
+	; Cannot load kernel (load)
 	mov si, STR_ERROR_LOAD_SECTORS
 	call print
 	jmp end
 
-	.loading_noErrorSector:
-
+	.noErrorSector:
 	popa
+
 	ret
 
 
@@ -164,6 +167,7 @@ STR_ERROR_LOAD_CHECK: db "Error: Kernel not successfully loaded, incorrect magic
 STR_LOAD_OK: db "Kernel loaded", 0
 STR_ERROR_FATAL: db "Error: Fatal, exited with uncommon exit code", 0
 
+
 ; --- Variables --- ;
 ; The default drive id to read sectors from it
 defaultDrive: db 0
@@ -172,5 +176,6 @@ defaultDrive: db 0
 ; --- Footer --- ;
 ; Padding
 times 510 - ($ - $$) db 0
-dw 0xAA55
 
+; Magic number
+dw 0xAA55
