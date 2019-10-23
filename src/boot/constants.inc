@@ -3,8 +3,9 @@
 ; Where to load the kernel (must be a 16 multiple)
 %define KERNEL_OFFSET 0x1000
 
+; TODO : Useless ?
 ; The address of the main function
-%define KERNEL_ENTRY (KERNEL_OFFSET + 0x200)
+; %define KERNEL_ENTRY (KERNEL_OFFSET + 0x200)
 
 ; The address of the stack highest (first) address
 %define KERNEL_STACK_HIGH 0x90000

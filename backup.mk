@@ -19,70 +19,68 @@ TOOL_LINK = /mnt/data/donnees/linux/logiciels/i386-elf-9.1.0/bin/i386-elf-ld
 FLAG_ASM = -i src/boot
 FLAG_C = -Wall -Wextra -std=c99 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs -ffreestanding -m32 -I src/kernel
 FLAG_OBJ = -MMD
-FLAG_LINK = -Ttext $(KERNEL_START) --oformat binary -e entry
 
 # Files
 SRC = $(wildcard src/kernel/*.c)
-# TODO rename C_SRC / C_OBJ...
 OBJ = $(patsubst src/kernel/%.c,tmp/kernel/%.o,$(SRC))
 DEP = $(OBJ:.o=.d)
 
-SRC_BOOT = src/boot/boot.asm
-SRC_ENTRY = src/kernel/entry.asm
-
 FILE_BOOT = tmp/boot/boot
-FILE_ENTRY = tmp/kernel/entry.o
-FILE_KERNEL = tmp/kernel/kernel
+FILE_BOOTLOADER = tmp/boot/bootloader.o
+FILE_KERNEL = tmp/kernel/kernel.o
 
 
 # Rules #
 .PHONY: run
 .PHONY: flush
 .PHONY: clean
-# .PHONY: boot
-# .PHONY: kernel
-# .PHONY: objects
+.PHONY: boot
+.PHONY: kernel
+.PHONY: objects
 
 
 # OS #
-bin/os: bin $(FILE_BOOT) $(FILE_KERNEL)
-	cat $(FILE_BOOT) $(FILE_KERNEL) > bin/os
+bin/os: bin boot kernel
+	cat $(FILE_BOOTLOADER) $(FILE_KERNEL) > bin/os
 
 run: bin/os
 	qemu-system-i386 -drive format=raw,if=floppy,index=0,file=bin/os
 
 
 # Boot #
-$(FILE_BOOT): tmp/boot $(SRC_BOOT)
-	$(TOOL_ASM) $(FLAG_ASM) -f bin -o $(FILE_BOOT) $(SRC_BOOT)
+boot: tmp/boot $(FILE_BOOTLOADER) $(FILE_BOOT)
+
+$(FILE_BOOTLOADER): src/boot/bootloader.asm
+	$(TOOL_ASM) $(FLAG_ASM) -f bin -o $@ $<
+
+$(FILE_BOOT): src/boot/boot.asm
+	$(TOOL_ASM) $(FLAG_ASM) -f elf -o $@ $<
 
 
 # Kernel #
-# Kernel (link objects)
-# TODO : Create variable for all objects
-$(FILE_KERNEL): $(FILE_ENTRY) $(OBJ)
-	$(TOOL_LINK) $(FLAG_LINK) -o $(FILE_KERNEL) $^
+# Link all kernel files and the bootloader
+kernel: tmp/kernel objects
 
-# Entry
-$(FILE_ENTRY): tmp/kernel $(SRC_ENTRY)
-	$(TOOL_ASM) $(FLAG_ASM) -f elf -o $(FILE_ENTRY) $(SRC_ENTRY)
+objects: $(OBJ)
+	$(TOOL_LINK) -o $(FILE_KERNEL) -Ttext $(KERNEL_START) $^ --oformat binary
 
-# C
-# TODO : Recursive directories
-# TODO : Warning starting address
+# Each object
 tmp/kernel/%.o: src/kernel/%.c
-	$(TOOL_C) $(FLAG_C) $(FLAG_OBJ) -c -o $@ $<
+	$(TOOL_C) $(OBJ_FLAGS) $(BUILD_FLAGS) -c -o $@ $<
 
 
 # Directories #
 bin:
-	mkdir -p bin
+	mkdir bin
 
-tmp/boot:
-	mkdir -p tmp/boot
+tmp:
+	mkdir tmp
 
-tmp/kernel:
-	mkdir -p tmp/kernel
+tmp/boot: tmp
+	mkdir tmp/boot
+
+tmp/kernel: tmp
+	mkdir tmp/kernel
 
 
 # Cleaning #
