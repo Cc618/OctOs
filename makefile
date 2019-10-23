@@ -6,6 +6,13 @@
 # make asm : Generates the bootloader part (in assembly) named tmp/boot
 
 
+# Compilation Pipeline #
+# 1. Compile src/boot/boot.asm in binary
+# 2. Compile src/kernel/entry.asm as elf (object) file
+# 3. Compile C sources as object files
+# 4. Link all objects
+# 5. Concatenates all files in one binary image (bin/os)
+
 # Tools #
 # Constants
 KERNEL_START = 0x1000
@@ -17,15 +24,16 @@ TOOL_LINK = /mnt/data/donnees/linux/logiciels/i386-elf-9.1.0/bin/i386-elf-ld
 
 # Flags
 FLAG_ASM = -i src/boot
-FLAG_C = -Wall -Wextra -std=c99 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs -ffreestanding -m32 -I src/kernel
-FLAG_OBJ = -MMD
+FLAG_C = -Wall -Wextra -std=c99 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs -ffreestanding -m32 -I src/kernel -MMD
 FLAG_LINK = -Ttext $(KERNEL_START) --oformat binary -e entry
 
 # Files
-SRC = $(wildcard src/kernel/*.c)
-# TODO rename C_SRC / C_OBJ...
-OBJ = $(patsubst src/kernel/%.c,tmp/kernel/%.o,$(SRC))
-DEP = $(OBJ:.o=.d)
+C_SRC = $(wildcard src/kernel/*.c)
+C_OBJ = $(patsubst src/kernel/%.c,tmp/kernel/%.o,$(C_SRC))
+C_DEP = $(C_OBJ:.o=.d)
+
+# All object files in order to assemble
+OBJ = $(FILE_ENTRY) $(C_OBJ)
 
 SRC_BOOT = src/boot/boot.asm
 SRC_ENTRY = src/kernel/entry.asm
@@ -39,9 +47,6 @@ FILE_KERNEL = tmp/kernel/kernel
 .PHONY: run
 .PHONY: flush
 .PHONY: clean
-# .PHONY: boot
-# .PHONY: kernel
-# .PHONY: objects
 
 
 # OS #
@@ -60,7 +65,7 @@ $(FILE_BOOT): tmp/boot $(SRC_BOOT)
 # Kernel #
 # Kernel (link objects)
 # TODO : Create variable for all objects
-$(FILE_KERNEL): $(FILE_ENTRY) $(OBJ)
+$(FILE_KERNEL): $(OBJ)
 	$(TOOL_LINK) $(FLAG_LINK) -o $(FILE_KERNEL) $^
 
 # Entry
@@ -71,7 +76,7 @@ $(FILE_ENTRY): tmp/kernel $(SRC_ENTRY)
 # TODO : Recursive directories
 # TODO : Warning starting address
 tmp/kernel/%.o: src/kernel/%.c
-	$(TOOL_C) $(FLAG_C) $(FLAG_OBJ) -c -o $@ $<
+	$(TOOL_C) $(FLAG_C) -c -o $@ $<
 
 
 # Directories #
@@ -95,4 +100,4 @@ clean: flush
 
 # Depedencies #
 # Include depedencies (auto update headers)
--include $(DEP)
+-include $(C_DEP)

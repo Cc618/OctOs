@@ -3,13 +3,13 @@ An OS created in October. This OS is 32 bits, provides a heap and a command line
 
 ## Features
 - Pure bootloader (no GRUB).
-- (WIP) 32 bits, protected mode.
+- 32 bits, protected mode.
 - (WIP) Heap.
-- (WIP) Commad line interface.
+- (WIP) Command line interface.
 
 ## Architecture
 - src : Source files.
-- src/boot : Bootloader source files (Assembly).
+- src/boot : Boot source files (Assembly).
 - src/kernel : Kernel source files (C).
 
 ## Build
