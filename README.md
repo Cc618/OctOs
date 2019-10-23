@@ -26,4 +26,4 @@ To build the OS you must have :
 - ld (for i386, provided with GCC) : To link object files
 
 If the compilation fails, please make sure that you have a cross compiler (for i386).
-Here is some [Build a cross compiler](documentation https://wiki.osdev.org/GCC_Cross-Compiler) about how to build a cross compiler. 
+Here is some [documentation](https://wiki.osdev.org/GCC_Cross-Compiler "Build a cross compiler") about how to build a cross compiler. 
