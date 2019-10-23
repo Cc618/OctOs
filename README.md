@@ -1,6 +1,8 @@
 # OctOs
 An OS created in October. This OS is 32 bits, provides a heap and a command line interface.
 
+[OctOs Thumbnail](screenshots/thumbnail.png "OctOs")
+
 ## Features
 - Pure bootloader (no GRUB).
 - 32 bits, protected mode.
