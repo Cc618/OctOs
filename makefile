@@ -30,8 +30,8 @@ TOOL_LINK ?= /mnt/data/donnees/linux/logiciels/i386-elf-9.1.0/bin/i386-elf-ld
 
 # Flags
 FLAG_ASM = -i src/boot
-FLAG_C = -Wall -Wextra -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs -ffreestanding -m32 -I src/kernel -MMD
-FLAG_LINK = -Ttext $(KERNEL_START) --oformat binary -e entry
+FLAG_CPP = -Wall -Wextra -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs -ffreestanding -m32 -I src/kernel -MMD
+FLAG_LINK = -Ttext $(KERNEL_START) -e entry
 FLAG_RUN = -drive format=raw,if=floppy,index=0,file=bin/os
 
 # Files
@@ -53,8 +53,8 @@ FILE_KERNEL = tmp/kernel/kernel
 
 # Debugging #
 ifeq ($(DEBUG), 1)
-	FLAG_C += -ggdb
-	FLAG_RUN += -s -S
+FLAG_CPP += -ggdb
+FLAG_RUN += -s -S
 endif
 
 
@@ -68,13 +68,7 @@ bin/os: bin $(FILE_BOOT) $(FILE_BOOT_SUFFIX) $(FILE_KERNEL)
 
 run: bin/os
 ifeq ($(DEBUG), 1)
-	# TODO : Move
-	# objcopy --only-keep-debug bin/os bin/os.sym
-	# objcopy --strip-debug bin/os
-	# objcopy -O binary bin/os bin/os
-
-	# TODO : Don't continue
-	gnome-terminal . -- bash -c "cd $(PWD) && ((printf 'target remote localhost:1234\ncontinue\n'; cat) | $(TOOL_DEBUG) bin/os); exec bash"
+	gnome-terminal . -- bash -c "cd $(PWD) && ((printf 'target remote localhost:1234\nsymbol-file tmp/kernel/kernel.sym\nb *main\ncontinue\n'; cat) | $(TOOL_DEBUG) bin/os); exec bash"
 	qemu-system-i386 $(FLAG_RUN)
 else
 	qemu-system-i386 $(FLAG_RUN)
@@ -91,7 +85,15 @@ $(FILE_BOOT_SUFFIX): tmp/boot
 # Kernel #
 # Kernel (link objects)
 $(FILE_KERNEL): $(OBJ)
-	$(TOOL_LINK) $(FLAG_LINK) -o $(FILE_KERNEL) $^
+ifeq ($(DEBUG), 1)
+	$(TOOL_LINK) $(FLAG_LINK) -o tmp/kernel/kernel.elf $^
+
+	objcopy --only-keep-debug tmp/kernel/kernel.elf tmp/kernel/kernel.sym
+	objcopy --strip-debug tmp/kernel/kernel.elf
+	objcopy -O binary tmp/kernel/kernel.elf $(FILE_KERNEL)
+else
+	$(TOOL_LINK) $(FLAG_LINK) --oformat binary -o $(FILE_KERNEL) $^
+endif
 
 # Entry
 $(FILE_ENTRY): tmp/kernel $(SRC_ENTRY) src/boot/constants.inc
@@ -101,7 +103,7 @@ $(FILE_ENTRY): tmp/kernel $(SRC_ENTRY) src/boot/constants.inc
 # TODO : Warning starting address
 tmp/kernel/%.o: src/kernel/%.cpp
 	mkdir -p $(dir $@)
-	$(TOOL_CPP) $(FLAG_C) -c -o $@ $<
+	$(TOOL_CPP) $(FLAG_CPP) -c -o $@ $<
 
 
 # Directories #
