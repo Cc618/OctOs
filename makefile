@@ -25,22 +25,23 @@ TOOL_ASM ?= nasm
 TOOL_PY ?= python3
 TOOL_DEBUG ?= gdb
 # Cross Compilers
-TOOL_C ?= /mnt/data/donnees/linux/logiciels/i386-elf-9.1.0/bin/i386-elf-gcc
+TOOL_CPP ?= /mnt/data/donnees/linux/logiciels/i386-elf-9.1.0/bin/i386-elf-g++
 TOOL_LINK ?= /mnt/data/donnees/linux/logiciels/i386-elf-9.1.0/bin/i386-elf-ld
 
 # Flags
 FLAG_ASM = -i src/boot
-FLAG_C = -Wall -Wextra -std=c99 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs -ffreestanding -m32 -I src/kernel -MMD
+FLAG_C = -Wall -Wextra -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs -ffreestanding -m32 -I src/kernel -MMD
 FLAG_LINK = -Ttext $(KERNEL_START) --oformat binary -e entry
 FLAG_RUN = -drive format=raw,if=floppy,index=0,file=bin/os
 
 # Files
-C_SRC = $(wildcard src/kernel/*.c)
-C_OBJ = $(patsubst src/kernel/%.c,tmp/kernel/%.o,$(C_SRC))
-C_DEP = $(C_OBJ:.o=.d)
+# TODO : CPP
+CPP_SRC = $(wildcard src/kernel/*.cpp)
+CPP_OBJ = $(patsubst src/kernel/%.cpp,tmp/kernel/%.o,$(CPP_SRC))
+CPP_DEP = $(CPP_OBJ:.o=.d)
 
 # All object files in order to assemble
-OBJ = $(FILE_ENTRY) $(C_OBJ)
+OBJ = $(FILE_ENTRY) $(CPP_OBJ)
 
 SRC_BOOT = src/boot/boot.asm
 SRC_ENTRY = src/kernel/entry.asm
@@ -102,8 +103,8 @@ $(FILE_ENTRY): tmp/kernel $(SRC_ENTRY) src/boot/constants.inc
 # C
 # TODO : Recursive directories
 # TODO : Warning starting address
-tmp/kernel/%.o: src/kernel/%.c
-	$(TOOL_C) $(FLAG_C) -c -o $@ $<
+tmp/kernel/%.o: src/kernel/%.cpp
+	$(TOOL_CPP) $(FLAG_C) -c -o $@ $<
 
 
 # Directories #
@@ -127,4 +128,4 @@ clean: flush
 
 # Depedencies #
 # Include depedencies (auto update headers)
--include $(C_DEP)
+-include $(CPP_DEP)
