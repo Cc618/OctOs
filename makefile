@@ -14,13 +14,17 @@
 # 5. Concatenates all files in one binary image (bin/os)
 
 
-# Tools #
 # Constants
 KERNEL_START = 0x1000
 
-# Cross Compilers
+# To add debugging symbols
+DEBUG ?= 1
+
+# Tools #
 TOOL_ASM ?= nasm
 TOOL_PY ?= python3
+TOOL_DEBUG ?= gdb
+# Cross Compilers
 TOOL_C ?= /mnt/data/donnees/linux/logiciels/i386-elf-9.1.0/bin/i386-elf-gcc
 TOOL_LINK ?= /mnt/data/donnees/linux/logiciels/i386-elf-9.1.0/bin/i386-elf-ld
 
@@ -28,6 +32,7 @@ TOOL_LINK ?= /mnt/data/donnees/linux/logiciels/i386-elf-9.1.0/bin/i386-elf-ld
 FLAG_ASM = -i src/boot
 FLAG_C = -Wall -Wextra -std=c99 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs -ffreestanding -m32 -I src/kernel -MMD
 FLAG_LINK = -Ttext $(KERNEL_START) --oformat binary -e entry
+FLAG_RUN = -drive format=raw,if=floppy,index=0,file=bin/os
 
 # Files
 C_SRC = $(wildcard src/kernel/*.c)
@@ -46,6 +51,13 @@ FILE_ENTRY = tmp/kernel/entry.o
 FILE_KERNEL = tmp/kernel/kernel
 
 
+# Debugging #
+ifeq ($(DEBUG), 1)
+	FLAG_C += -ggdb
+	FLAG_RUN += -s -S
+endif
+
+
 # Rules #
 .PHONY: run
 .PHONY: flush
@@ -57,8 +69,18 @@ bin/os: bin $(FILE_BOOT) $(FILE_BOOT_SUFFIX) $(FILE_KERNEL)
 	cat $(FILE_BOOT) $(FILE_BOOT_SUFFIX) $(FILE_KERNEL) > bin/os
 
 run: bin/os
-	qemu-system-i386 -drive format=raw,if=floppy,index=0,file=bin/os
+ifeq ($(DEBUG), 1)
+	# TODO : Move
+	# objcopy --only-keep-debug bin/os bin/os.sym
+	# objcopy --strip-debug bin/os
+	# objcopy -O binary bin/os bin/os
 
+	# TODO : Don't continue
+	gnome-terminal . -- bash -c "cd $(PWD) && ((printf 'target remote localhost:1234\ncontinue\n'; cat) | $(TOOL_DEBUG) bin/os); exec bash"
+	qemu-system-i386 $(FLAG_RUN)
+else
+	qemu-system-i386 $(FLAG_RUN)
+endif
 
 # Boot #
 $(FILE_BOOT): tmp/boot $(SRC_BOOT) src/boot/constants.inc src/boot/gdt.inc
