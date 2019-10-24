@@ -27,47 +27,6 @@ _bootloaderMain:
 	mov si, STR_LOAD
 	call print
 
-
-
-
-
-
-
-
-
-
-; 	mov al, byte [LOAD_SECTORS_OFFSET]
-; 	cmp al, 18
-; 	je end
-
-; 	mov si, CUSTOM
-; 	call print
-
-
-
-; 	jmp end
-
-
-; CUSTOM: db "Custom", 0
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	; Load kernel
 	call loadKernel
 
