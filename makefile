@@ -18,7 +18,7 @@
 KERNEL_START = 0x1000
 
 # To add debugging symbols
-DEBUG ?= 1
+DEBUG ?= 0
 
 # Tools #
 TOOL_ASM ?= nasm
@@ -35,8 +35,7 @@ FLAG_LINK = -Ttext $(KERNEL_START) --oformat binary -e entry
 FLAG_RUN = -drive format=raw,if=floppy,index=0,file=bin/os
 
 # Files
-# TODO : CPP
-CPP_SRC = $(wildcard src/kernel/*.cpp)
+CPP_SRC = $(shell find src/kernel -name "*.cpp")
 CPP_OBJ = $(patsubst src/kernel/%.cpp,tmp/kernel/%.o,$(CPP_SRC))
 CPP_DEP = $(CPP_OBJ:.o=.d)
 
@@ -60,9 +59,7 @@ endif
 
 
 # Rules #
-.PHONY: run
-.PHONY: flush
-.PHONY: clean
+.PHONY: run flush clean
 
 
 # OS #
@@ -101,9 +98,9 @@ $(FILE_ENTRY): tmp/kernel $(SRC_ENTRY) src/boot/constants.inc
 	$(TOOL_ASM) $(FLAG_ASM) -f elf -o $(FILE_ENTRY) $(SRC_ENTRY)
 
 # C
-# TODO : Recursive directories
 # TODO : Warning starting address
 tmp/kernel/%.o: src/kernel/%.cpp
+	mkdir -p $(dir $@)
 	$(TOOL_CPP) $(FLAG_C) -c -o $@ $<
 
 

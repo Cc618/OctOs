@@ -81,6 +81,14 @@ void printRaw(const char *STRING, const unsigned int i)
 // Entry point of the os
 void main()
 {
+	extern int CONST;
+
+	if (CONST == 8)
+		printRaw("OK", 0);
+	else
+		printRaw("!!!", 0);
+	
+
 	// Yellow background, black font
 	fillScreen(0xE0);
 
