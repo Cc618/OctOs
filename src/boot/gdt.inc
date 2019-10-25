@@ -12,7 +12,7 @@ gdt_code:
 	; Base (16:23)
 	db 0x0
 	; Flags 
-	db 10011010b
+	db 10011010b	; = 0x9A
 	; Flags (4 bits) + limit (16:29)
 	db 11001111b
 	; Base
@@ -27,7 +27,7 @@ gdt_data:
 	; Base (16:23)
 	db 0x0
 	; Flags 
-	db 10010010b
+	db 10010010b	; = 0x92
 	; Flags (4 bits) + limit (16:29)
 	db 11001111b
 	; Base

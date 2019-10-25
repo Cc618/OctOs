@@ -15,8 +15,6 @@
 
 
 # Constants
-KERNEL_START = 0x7E00
-
 # To add debugging symbols
 DEBUG ?= 0
 DEBUG_GDB_ARGS ?= printf 'target remote localhost:1234\nsymbol-file tmp/kernel/kernel.sym\nb *main\ncontinue\n'
@@ -32,7 +30,7 @@ TOOL_LINK ?= /mnt/data/donnees/linux/logiciels/i386-elf-9.1.0/bin/i386-elf-ld
 # Flags
 FLAG_ASM = -i src/boot
 FLAG_CPP = -Wall -Wextra -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs -ffreestanding -m32 -I src/kernel -MMD
-FLAG_LINK = -Ttext $(KERNEL_START) -e entry
+FLAG_LINK = -T linker.ld -e entry
 FLAG_RUN = -drive format=raw,if=floppy,index=0,file=bin/os
 
 # Files
@@ -64,7 +62,7 @@ endif
 
 
 # OS #
-bin/os: bin $(FILE_BOOT) $(FILE_BOOT_SUFFIX) $(FILE_KERNEL)
+bin/os: bin $(FILE_BOOT) $(FILE_KERNEL) $(FILE_BOOT_SUFFIX)
 	cat $(FILE_BOOT) $(FILE_BOOT_SUFFIX) $(FILE_KERNEL) > bin/os
 
 run: bin/os
@@ -79,8 +77,8 @@ endif
 $(FILE_BOOT): tmp/boot $(SRC_BOOT) src/boot/constants.inc src/boot/gdt.inc
 	$(TOOL_ASM) $(FLAG_ASM) -f bin -o $(FILE_BOOT) $(SRC_BOOT)
 
-$(FILE_BOOT_SUFFIX): tmp/boot
-	$(TOOL_PY) utils/boot_suffix.py $(FILE_BOOT) > $(FILE_BOOT_SUFFIX)
+$(FILE_BOOT_SUFFIX): $(FILE_KERNEL)
+	$(TOOL_PY) utils/boot_suffix.py $(FILE_KERNEL) > $(FILE_BOOT_SUFFIX)
 
 
 # Kernel #

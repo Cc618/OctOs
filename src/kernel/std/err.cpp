@@ -10,21 +10,21 @@ namespace std
 	// All messages
 	cstr MSG_MEM_NULLPTR = "Nullptr";
 	cstr MSG_MEM_OVERFLOW = "Memory overflow";
-	cstr MSG_HEAP_ALLOC = "Heap alloc";
+	cstr MSG_MEM_ALLOC = "Heap alloc";
 
 	cstr getErrorMsg(const error ERROR)
 	{
-
+		// Find good message
 		switch (ERROR)
 		{
 		case error::MEM_NULLPTR:
-			return "MSG_MEM_NULLPTR";
+			return MSG_MEM_NULLPTR;
 
 		case error::MEM_OVERFLOW:
-			return "MSG_MEM_NULLPTR";
+			return MSG_MEM_NULLPTR;
 
-		case error::HEAP_ALLOC:
-			return "MSG_HEAP_ALLOC";
+		case error::MEM_ALLOC:
+			return MSG_MEM_ALLOC;
 		}
 
 		// Not found

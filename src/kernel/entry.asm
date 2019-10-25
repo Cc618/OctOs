@@ -3,6 +3,7 @@
 
 %include "constants.inc"
 
+
 ; Magic word
 dw KERNEL_MAGIC
 

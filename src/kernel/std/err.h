@@ -13,7 +13,7 @@ namespace std
 		// Can't access desired memory location / forbidden address
 		MEM_OVERFLOW,
 		// Not enough memory to allocate data 
-		HEAP_ALLOC,
+		MEM_ALLOC,
 	};
 
 	// Returns the message of the error
