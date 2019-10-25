@@ -6,9 +6,16 @@ An OS created in October. This OS is 32 bits, provides a heap and a command line
 ## Features
 - Pure bootloader (no GRUB).
 - 32 bits, protected mode.
+- Custom standard library
 - (WIP) Command line interface.
 - (WIP) Heap.
 - (WIP) Commands.
+
+## Standard Library
+This os provides a custom standard library located in src/kernel/std, here is files :
+- types : System types
+- io : Input / Output
+- mem : Memory handling
 
 ## Architecture
 - utils : Some scripts.
