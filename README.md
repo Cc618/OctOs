@@ -16,12 +16,14 @@ This os provides a custom standard library located in src/kernel/std, here is fi
 - types : System types
 - io : Input / Output
 - mem : Memory handling
+- err : Error handling
 
 ## Architecture
 - utils : Some scripts.
 - src : Source files.
 - src/boot : Boot source files (Assembly).
 - src/kernel : Kernel source files (C).
+- src/kernel/std : Standard library.
 
 ## Build
 Here is makefile commands. To build :

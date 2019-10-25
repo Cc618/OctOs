@@ -9,6 +9,8 @@ namespace std
 	// Fills the screen with format
 	void fillScreen(const byte FORMAT);
 
+	// TODO : Print numbers
+	// TODO : Cursor
 
 	// TODO : Keep ?
 	// Writes raw string (without special chars like TABs, CRLFs...)

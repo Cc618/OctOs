@@ -19,6 +19,7 @@ KERNEL_START = 0x7E00
 
 # To add debugging symbols
 DEBUG ?= 0
+DEBUG_GDB_ARGS ?= printf 'target remote localhost:1234\nsymbol-file tmp/kernel/kernel.sym\nb *main\ncontinue\n'
 
 # Tools #
 TOOL_ASM ?= nasm
@@ -68,7 +69,7 @@ bin/os: bin $(FILE_BOOT) $(FILE_BOOT_SUFFIX) $(FILE_KERNEL)
 
 run: bin/os
 ifeq ($(DEBUG), 1)
-	gnome-terminal . -- bash -c "cd $(PWD) && ((printf 'target remote localhost:1234\nsymbol-file tmp/kernel/kernel.sym\nb *main\ncontinue\n'; cat) | $(TOOL_DEBUG) bin/os); exec bash"
+	gnome-terminal . -- bash -c "cd $(PWD) && (($(DEBUG_GDB_ARGS); cat) | $(TOOL_DEBUG) bin/os); exec bash"
 	qemu-system-i386 $(FLAG_RUN)
 else
 	qemu-system-i386 $(FLAG_RUN)
