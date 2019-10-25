@@ -15,7 +15,7 @@
 
 
 # Constants
-KERNEL_START = 0x1000
+KERNEL_START = 0x7E00
 
 # To add debugging symbols
 DEBUG ?= 0

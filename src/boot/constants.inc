@@ -1,7 +1,7 @@
 ; All constants
 
 ; Where to load the kernel (must be a 16 multiple)
-%define KERNEL_OFFSET 0x1000
+%define KERNEL_OFFSET 0x7E00
 
 ; The address of the stack highest (first) address
 %define KERNEL_STACK_HIGH 0x90000
