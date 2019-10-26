@@ -6,6 +6,36 @@
 
 namespace std
 {
+	// Constants //
+	constexpr byte CURSOR_STYLE = 0x0D;
+
+	// Global variable //
+	// The offset from the origin of the cursor
+	u16 cursorOffset = 0;
+
+	// Internal Functions //
+	// Converts byte from 0 to 15 to hex char representation
+	char _rawWriteByteGetHex(const byte VALUE)
+	{
+		if (VALUE < 10)
+			return '0' + (char)VALUE;
+
+		return 'A' + (char)VALUE - 0xA;
+	}
+
+	// Updates the cursor position
+	void _updateCursorOffset()
+	{
+		// High
+		outb(0x0E, port::VGA_SELECT);
+		outb((cursorOffset & 0xFF00) >> 8, port::VGA_DATA);
+
+		// Low
+		outb(0x0F, port::VGA_SELECT);
+		outb(cursorOffset & 0xFF, port::VGA_DATA);
+	}
+
+	// Functions //
 	void fillScreen(const byte FORMAT)
 	{
 		for (sz i = VIDEO_MEMORY_START; i < VIDEO_MEMORY_END; i += 2)
@@ -22,27 +52,79 @@ namespace std
 			// End of string
 			if (c == '\0')
 				break;
-			
+
 			// Display char
 			*((char*)i) = c;
 		}
 	}
 
+	void rawWriteByte(const byte VALUE, const sz OFFSET)
+	{
+		// Address to write
+		char *address = (char*)(VIDEO_MEMORY_START + (OFFSET << 1));
+
+		// Outside of video memory, no exceptions
+		if (address >= (char*)VIDEO_MEMORY_END)
+			return;
+
+		// 4 first bits
+		const byte UPPER = (VALUE & 0xF0) >> 4;
+
+		// Write
+		*address = _rawWriteByteGetHex(UPPER);
+
+		// Next char
+		address += 2;
+
+		// Outside of video memory, no exceptions
+		if (address >= (char*)VIDEO_MEMORY_END)
+			return;
+
+		// 4 last bits
+		const byte LOWER = VALUE & 0xF;
+
+		// Write
+		*address = _rawWriteByteGetHex(LOWER);
+	}
+
+	void rawWriteHex(const i32 VALUE, const sz OFFSET)
+	{
+		// Write each byte
+		rawWriteByte((VALUE & (0xFF << 24)) >> 24, OFFSET);
+		rawWriteByte((VALUE & (0xFF << 16)) >> 16, OFFSET + 2);
+		rawWriteByte((VALUE & (0xFF << 8)) >> 8, OFFSET + 4);
+		rawWriteByte(VALUE & 0xFF, OFFSET + 6);
+	}
+
 	void enableCursor()
 	{
-		// outb(0x0A, 0x3D4);
-		// outb((inb(0x3D5) & 0xC0) | cursor_start, 0x3D5);
-	
-		// outb(0x0B, 0x3D4);
-		// outb((inb(0x3D5) & 0xE0) | cursor_end, 0x3D5);
+		// Set address (index)
+		outb(0x0A, port::VGA_SELECT);
 
-		outb(0x0A, 0x3D4);
-		outb(0x00, 0x3D5);
+		// Set data
+		outb(CURSOR_STYLE, port::VGA_DATA);
 	}
 
 	void disableCursor()
 	{
-		outb(0x0A, 0x3D4);
-		outb(0x20, 0x3D5);
+		// Set address (index)
+		outb(0x0A, port::VGA_SELECT);
+
+		// Set data
+		outb(0x20, port::VGA_DATA);
+	}
+
+	void setCursorPosition(const u16 x, const u16 y)
+	{
+		// Update cursor position
+		cursorOffset = x + y * VIDEO_MEMORY_WIDTH;
+		_updateCursorOffset();
+	}
+
+	void moveCursor(const u16 OFFSET)
+	{
+		// Update cursor position
+		cursorOffset += OFFSET;
+		_updateCursorOffset();
 	}
 } // namespace std

@@ -36,13 +36,22 @@ namespace std
 	// Printing //
 	// TODO : Print numbers
 
-	// TODO : Keep ?
+	// TODO : rm after other print methods
 	// Writes raw string (without special chars like TABs, CRLFs...)
 	// * If the string is too long, the function stops but no exceptions are raised
 	void rawWrite(cstr STRING, const sz OFFSET);
+	void rawWriteByte(const byte VALUE, const sz OFFSET);
+	void rawWriteHex(const i32 VALUE, const sz OFFSET);
+	// void rawWriteInt(const i32 VALUE, const sz OFFSET);
+
+
 
 	// Cursor //
 	// Enabling / desabling
 	void enableCursor();
 	void disableCursor();
+
+	// Moving
+	void setCursorPosition(const u16 x, const u16 y);
+	void moveCursor(const u16 OFFSET);
 } // namespace std
