@@ -95,9 +95,9 @@ else
 	$(TOOL_LINK) $(FLAG_LINK) --oformat binary -o $(FILE_KERNEL) $^
 endif
 
-# Entry
+# Kernel Entry (asm)
 $(FILE_ENTRY): tmp/kernel $(SRC_ENTRY) src/boot/constants.inc
-	$(TOOL_ASM) $(FLAG_ASM) -f elf -o $(FILE_ENTRY) $(SRC_ENTRY)
+	$(TOOL_ASM) $(FLAG_ASM) -f elf -o $(FILE_ENTRY) -Isrc/kernel/lowlevel $(SRC_ENTRY)
 
 # C
 # TODO : Warning starting address
@@ -123,6 +123,7 @@ flush:
 
 clean: flush
 	rm -rf bin
+	clear
 
 
 # Depedencies #

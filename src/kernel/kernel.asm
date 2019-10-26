@@ -20,6 +20,21 @@ entry:
 
 
 section .text
+; --- Interrupts --- ;
+; TODO : rm ?
+%include "idt.asm"
+
+; Inits the IDT in the idtPointer variable
+; TODO : ren
+extern idtp
+global loadIDT
+loadIDT:
+	lidt [idtp]
+	sti
+
+	ret
+
+
 ; --- Ports --- ;
 ; Outputs a byte from a port
 ; * See documentation in drivers/port.h
@@ -41,6 +56,7 @@ outb:
 
 	leave
 	ret
+
 
 ; Receives a byte from a port
 ; * See documentation in drivers/port.h

@@ -5,6 +5,10 @@
 
 
 
+extern "C" void initInterrupts();
+
+
+
 // TODO : getChar
 char getChar()
 {
@@ -31,55 +35,17 @@ extern "C" void main()
 	// Yellow background, black font
 	fillScreen(0xE0);
 
-	// rawWrite("Hello world!", 0);
-	// rawWrite("OctOs 0.0.1", 80);
 
-
-	// // Set address (index)
-	// outb(0x0E, 0x3D4);
-	// rawWriteByte(inb(0x3D5), 0);
-	// outb(0x0F, 0x3D4);
-	// rawWriteByte(inb(0x3D5), 2);
-
+	// Interrupts
+	initInterrupts();
 
 
 	// Reset cursor
 	setCursorPosition(0, 0);
-	moveCursor(3);
-	rawWrite("OK!", 0);
-	moveCursor(3);
 
+	rawWrite("Hello world!", 0);
+	rawWrite("OctOs 0.0.1", 80);
 
-	// int x = 2,
-	// 	y = 4;
-
-
-	// while (1)
-	// {
-	// 	u16 offset = x + y * 80;
-
-	// 	// High
-	// 	outb(0x0E, 0x3D4);
-	// 	outb((offset & 0xFF00) >> 8, 0x3D5);
-
-	// 	// Low
-	// 	outb(0x0F, 0x3D4);
-	// 	outb(offset & 0xFF, 0x3D5);
-
-
-	// 	y = 8;
-	// 	getChar();
-	// }
-
-
-
-
-
-	// TODO : Update function
-	// disableCursor();
-	// enableCursor();
-
-
-
-
+	// Todo : Remove
+	disableCursor();
 }
