@@ -2,29 +2,7 @@
 #include <std/err.h>
 
 #include "drivers/ports.h"
-
-
-
-extern "C" void initInterrupts();
-
-
-
-// TODO : getChar
-char getChar()
-{
-	// TODO : replace 0x60 by def 
-	char c = 0;
-	while((c = inb(0x60)) != 0){
-		if(c > 0)
-			return c;
-	}
-
-	return 0;
-}
-
-
-
-
+#include "drivers/interrupts.h"
 
 // Entry point of the os
 extern "C" void main()
@@ -35,17 +13,20 @@ extern "C" void main()
 	// Yellow background, black font
 	fillScreen(0xE0);
 
-
 	// Interrupts
 	initInterrupts();
 
-
-	// Reset cursor
-	setCursorPosition(0, 0);
-
+	// Hello display
 	rawWrite("Hello world!", 0);
 	rawWrite("OctOs 0.0.1", 80);
 
-	// Todo : Remove
-	// disableCursor();
+	// Reset cursor
+	setCursorPosition(0, 3);
 }
+
+
+// TODO :
+// Loads the IDT, defined in kernel.asm
+// Interrupts defined in kernel/lowlevel.asm
+// Global variable which stores a pointer to the IDT descriptor
+

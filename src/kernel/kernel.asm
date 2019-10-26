@@ -24,12 +24,11 @@ section .text
 ; TODO : rm ?
 %include "idt.asm"
 
-; Inits the IDT in the idtPointer variable
-; TODO : ren
-extern idtp
+; Inits the IDT in the idtDescriptor variable
+extern idtDescriptor
 global loadIDT
 loadIDT:
-	lidt [idtp]
+	lidt [idtDescriptor]
 	sti
 
 	ret
