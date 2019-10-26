@@ -1,11 +1,13 @@
 ; All constants
 
 ; Where to load the kernel (must be a 16 multiple)
-%define KERNEL_OFFSET 0x7E00
+%define KERNEL_OFFSET 0x8000
 
 ; The address of the stack highest (first) address
 %define KERNEL_STACK_HIGH 0x90000
-%define BOOT_STACK_HIGH 0xA000
+
+; Just before the kernel offset
+%define BOOT_STACK_HIGH 0x8000
 
 ; The magic number we check to verify that the kernel
 ; is successfully loaded

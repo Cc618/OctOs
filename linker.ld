@@ -1,5 +1,5 @@
 /* Entry point */
-phys = 0x7E00;
+phys = 0x8000;
 
 OUTPUT_FORMAT("elf32-i386")
 OUTPUT_ARCH(i386)

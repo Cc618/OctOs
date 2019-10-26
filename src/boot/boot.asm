@@ -47,7 +47,7 @@ _bootloaderMain:
 	mov si, STR_LOAD_OK
 	call print
 
-	; Init 
+	; Init
 	call switchPm32
 
 
