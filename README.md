@@ -52,3 +52,10 @@ To build the OS you must have :
 
 If the compilation fails, please make sure that you have a cross compiler (for i386).
 Here is some [documentation](https://wiki.osdev.org/GCC_Cross-Compiler "Build a cross compiler") about how to build a cross compiler. 
+
+## Links
+Here are some usefull links :
+- [VGA reference](http://www.osdever.net/FreeVGA/vga/crtcreg.htm "VGA")
+- [Linux Kernel](https://github.com/torvalds/linux "Linux")
+- [OsDev](http://www.osdever.net/FreeVGA/vga/crtcreg.htm "OsDev")
+- [Developpez (French)](https://systeme.developpez.com/tutoriels/systeme-exploitation/petit-livre-developpement-OS/ "Developpez")
