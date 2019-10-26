@@ -1,153 +1,15 @@
 #include <std/types.h>
+#include <std/io.h>
 
 #include "drivers/ports.h"
-
+#include "drivers/keyboard.h"
 
 using namespace std;
 
 // Loads the IDT
 extern "C" void loadIDT();
 
-
-
-
-// struct idt_entry
-// {
-// 	u16 offsetLow;
-// 	u16 selector;
-// 	u8 zero;
-// 	u8 flags;
-// 	u16 offsetHigh;
-// } __attribute__((packed));
-
-// struct idtp
-// {
-// 	u16 limit;
-// 	ptr base;
-// } __attribute__((packed));
-
-// idt_entry idt[256];
-
-// // extern idtp idtp;
-// idtp idtp;
-
-
-
-// void set_idt_gate(u8 n, u32 base, u16 sel, u8 flags)
-// {
-// 	idt[n].offsetLow = base & 0xFFFF;
-// 	idt[n].offsetHigh = (base >> 16) & 0xFFFF;
-
-// 	idt[n].selector = 0x08;
-// 	idt[n].zero = 0;
-// 	idt[n].flags = flags;
-// }
-
-// void idt_install()
-// {
-// 	idtp.limit = (sizeof(idt_entry) * 256) - 1;
-// 	idtp.base = &idt;
-
-// 	for (sz i = 0; i < sizeof(idt_entry) * 256; ++i)
-// 		((byte*)idt)[i] = 0;
-
-// 	loadIDT();
-// }
-
-
-
-
-
-
-
-
-
-
-// extern "C"
-// {
-// 	typedef struct
-// 	{
-// 		u16 offsetLow;
-// 		u16 selector;
-// 		u8 zero;
-// 		u8 flags;
-// 		u16 offsetHigh;
-// 	} __attribute__((packed)) idt_entry;
-
-// 	typedef struct
-// 	{
-// 		u16 limit;
-// 		ptr base;
-// 	} __attribute__((packed)) idtp;
-
-// 	idt_entry idt[256];
-
-// 	extern idtp idtp;
-// 	idtp idtp;
-
-
-
-// 	void set_idt_gate(u8 n, u32 base, u16 sel, u8 flags)
-// 	{
-// 		idt[n].offsetLow = base & 0xFFFF;
-// 		idt[n].offsetHigh = (base >> 16) & 0xFFFF;
-
-// 		idt[n].selector = 0x08;
-// 		idt[n].zero = 0;
-// 		idt[n].flags = flags;
-// 	}
-
-// 	void idt_install()
-// 	{
-// 		idtp.limit = (sizeof(idt_entry) * 256) - 1;
-// 		idtp.base = &idt;
-
-// 		for (sz i = 0; i < sizeof(idt_entry) * 256; ++i)
-// 			((byte*)idt)[i] = 0;
-
-// 		// loadIDT();
-// 	}
-
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// TODO : Not C
+// TODO : Not C ?
 
 extern "C"
 {
@@ -336,81 +198,96 @@ extern "C"
 		loadIDT();
 	}
 
-	void irq0_handler(void) {
-        outb(0x20, 0x20); //EOI
+	void irq0_handler(void)
+	{
+		outb(0x20, 0x20); //EOI
 	}
-	
-	
-	
-	void irq2_handler(void) {
-			outb(0x20, 0x20); //EOI
-	}
-	
-	void irq3_handler(void) {
-			outb(0x20, 0x20); //EOI
-	}
-	
-	void irq4_handler(void) {
-			outb(0x20, 0x20); //EOI
-	}
-	
-	void irq5_handler(void) {
-			outb(0x20, 0x20); //EOI
-	}
-	
-	void irq6_handler(void) {
-			outb(0x20, 0x20); //EOI
-	}
-	
-	void irq7_handler(void) {
-			outb(0x20, 0x20); //EOI
-	}
-	
-	void irq8_handler(void) {
-			outb(0xA0, 0x20);
-			outb(0x20, 0x20); //EOI          
-	}
-	
-	void irq9_handler(void) {
-			outb(0xA0, 0x20);
-			outb(0x20, 0x20); //EOI
-	}
-	
-	void irq10_handler(void) {
-			outb(0xA0, 0x20);
-			outb(0x20, 0x20); //EOI
-	}
-	
-	void irq11_handler(void) {
-			outb(0xA0, 0x20);
-			outb(0x20, 0x20); //EOI
-	}
-	
-	void irq12_handler(void) {
-			outb(0xA0, 0x20);
-			outb(0x20, 0x20); //EOI
-	}
-	
-	void irq13_handler(void) {
-			outb(0xA0, 0x20);
-			outb(0x20, 0x20); //EOI
-	}
-	
-	void irq14_handler(void) {
-			outb(0xA0, 0x20);
-			outb(0x20, 0x20); //EOI
-	}
-	
-	void irq15_handler(void) {
-			outb(0xA0, 0x20);
-			outb(0x20, 0x20); //EOI
-	}
-}
 
-#include <std/io.h>
+	// Keyboard
+	void irq1_handler()
+	{
+		// Dispatch
+		dispatchKey(inb(port::KEYBOARD));
 
-extern "C" void irq1_handler()
-{
-	std::fillScreen(0x98);
-	outb(0x20, 0x20); //EOI
+		// End
+		outb(0x20, 0x20);
+	}
+
+	void irq2_handler(void)
+	{
+		outb(0x20, 0x20); //EOI
+	}
+
+	void irq3_handler(void)
+	{
+		outb(0x20, 0x20); //EOI
+	}
+
+	void irq4_handler(void)
+	{
+		outb(0x20, 0x20); //EOI
+	}
+
+	void irq5_handler(void)
+	{
+		outb(0x20, 0x20); //EOI
+	}
+
+	void irq6_handler(void)
+	{
+		outb(0x20, 0x20); //EOI
+	}
+
+	void irq7_handler(void)
+	{
+		outb(0x20, 0x20); //EOI
+	}
+
+	void irq8_handler(void)
+	{
+		outb(0xA0, 0x20);
+		outb(0x20, 0x20); //EOI
+	}
+
+	void irq9_handler(void)
+	{
+		outb(0xA0, 0x20);
+		outb(0x20, 0x20); //EOI
+	}
+
+	void irq10_handler(void)
+	{
+		outb(0xA0, 0x20);
+		outb(0x20, 0x20); //EOI
+	}
+
+	void irq11_handler(void)
+	{
+		outb(0xA0, 0x20);
+		outb(0x20, 0x20); //EOI
+	}
+
+	void irq12_handler(void)
+	{
+		outb(0xA0, 0x20);
+		outb(0x20, 0x20); //EOI
+	}
+
+	void irq13_handler(void)
+	{
+		outb(0xA0, 0x20);
+		outb(0x20, 0x20); //EOI
+	}
+
+	void irq14_handler(void)
+	{
+		outb(0xA0, 0x20);
+		outb(0x20, 0x20); //EOI
+	}
+
+	void irq15_handler(void)
+	{
+		outb(0xA0, 0x20);
+		outb(0x20, 0x20); //EOI
+	}
 }

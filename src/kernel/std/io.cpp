@@ -42,6 +42,34 @@ namespace std
 			*((u16*)i) = (u32)FORMAT << 8;
 	}
 
+	void putRawChar(const char c)
+	{
+		// Get the address to write in memory
+		char *target = (char*)(VIDEO_MEMORY_START + (cursorOffset << 1));
+
+		// Outside of video memory (screen)
+		if (target >= (char*)VIDEO_MEMORY_END)
+			return;
+
+		// Display char
+		*target = c;
+
+		// Update cursor
+		++cursorOffset;
+		_updateCursorOffset();
+	}
+
+	void putRawByte(const byte VALUE)
+	{
+		// Write
+		rawWriteByte(VALUE, cursorOffset);
+		
+		// Update cursor
+		cursorOffset += 2;
+		_updateCursorOffset();
+	}
+
+
 	void rawWrite(cstr STRING, const sz OFFSET)
 	{
 		for (sz i = VIDEO_MEMORY_START + (OFFSET << 1); i < VIDEO_MEMORY_END; i += 2)

@@ -47,5 +47,5 @@ extern "C" void main()
 	rawWrite("OctOs 0.0.1", 80);
 
 	// Todo : Remove
-	disableCursor();
+	// disableCursor();
 }

@@ -34,6 +34,13 @@ namespace std
 	void fillScreen(const byte FORMAT);
 
 	// Printing //
+	// TODO : Create putChar which handles special chars
+	// Puts a char at cursor position and updates the cursor
+	// The char is not a special char (no check)
+	void putRawChar(const char c);
+	void putRawByte(const byte VALUE);
+
+
 	// TODO : Print numbers
 
 	// TODO : rm after other print methods
