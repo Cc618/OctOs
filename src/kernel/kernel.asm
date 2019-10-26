@@ -49,9 +49,6 @@ inb:
 	push ebp
 	mov ebp, esp
 
-	; TODO : rm ?
-	xor eax, eax
-
 	push dx
 
 	; dx = port, al = value
