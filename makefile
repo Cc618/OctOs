@@ -43,11 +43,11 @@ CPP_DEP = $(CPP_OBJ:.o=.d)
 OBJ = $(FILE_ENTRY) $(CPP_OBJ)
 
 SRC_BOOT = src/boot/boot.asm
-SRC_ENTRY = src/kernel/entry.asm
+SRC_ENTRY = src/kernel/kernel.asm
 
 FILE_BOOT = tmp/boot/boot
 FILE_BOOT_SUFFIX = tmp/boot/suffix
-FILE_ENTRY = tmp/kernel/entry.o
+FILE_ENTRY = tmp/kernel/kernel.o
 FILE_KERNEL = tmp/kernel/kernel
 
 
