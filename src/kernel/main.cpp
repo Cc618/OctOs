@@ -25,8 +25,3 @@ extern "C" void main()
 }
 
 
-// TODO :
-// Loads the IDT, defined in kernel.asm
-// Interrupts defined in kernel/lowlevel.asm
-// Global variable which stores a pointer to the IDT descriptor
-

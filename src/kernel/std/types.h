@@ -17,6 +17,7 @@ namespace std
 	typedef size_t				sz;
 	typedef u8					byte;
 	typedef void* 				ptr;
+	typedef void				(*fun)();
 
 	// String //
 	typedef char*				str;

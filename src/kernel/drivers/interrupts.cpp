@@ -6,7 +6,7 @@
 
 using namespace std;
 
-// Loads the IDT
+// Loads the IDT, defined in kernel.asm
 extern "C" void loadIDT();
 
 // Interrupts defined in kernel/lowlevel.asm
@@ -56,7 +56,7 @@ inline void remapPIC()
 
 	// ICW2 : Remap offset address of IDT
 	outb(0x20, 0x21);
-	outb(40, 0xA1);
+	outb(0x28, 0xA1);
 
 	// ICW3 : Setup cascading
 	outb(0x04, 0x21);
@@ -71,144 +71,50 @@ inline void remapPIC()
 	outb(0x0, 0xA1);
 }
 
+void initInterruptEntry(IDT_entry& entry, const u32 IRQ_ADDRESS)
+{
+	constexpr u16 CODE_SEGMENT_OFFSET = 8;
+
+	entry.offset_lowerbits = IRQ_ADDRESS & 0xFFFF;
+	entry.selector = CODE_SEGMENT_OFFSET;
+	entry.zero = 0;
+	// Interrupt gate
+	entry.type_attr = 0x8E;
+	entry.offset_higherbits = (IRQ_ADDRESS & 0xFFFF0000) >> 16;
+}
+
 void initInterrupts()
 {
-	u32 irq0Address;
-	u32 irq1Address;
-	u32 irq2Address;
-	u32 irq3Address;
-	u32 irq4Address;
-	u32 irq5Address;
-	u32 irq6Address;
-	u32 irq7Address;
-	u32 irq8Address;
-	u32 irq9Address;
-	u32 irq10Address;
-	u32 irq11Address;
-	u32 irq12Address;
-	u32 irq13Address;
-	u32 irq14Address;
-	u32 irq15Address;
-	u32 idtAddress;
-
+	// Setup PIC
 	remapPIC();
 
-	irq0Address = (u32)irq0;
-	IDT[32].offset_lowerbits = irq0Address & 0xffff;
-	IDT[32].selector = 0x08; /* KERNEL_CODE_SEGMENT_OFFSET */
-	IDT[32].zero = 0;
-	IDT[32].type_attr = 0x8e; /* INTERRUPT_GATE */
-	IDT[32].offset_higherbits = (irq0Address & 0xffff0000) >> 16;
+	// Setup IRQs
+	constexpr fun IRQ_TABLE[16] = {
+		irq0,
+		irq1,
+		irq2,
+		irq3,
+		irq4,
+		irq5,
+		irq6,
+		irq7,
+		irq8,
+		irq9,
+		irq10,
+		irq11,
+		irq12,
+		irq13,
+		irq14,
+		irq15
+	};
 
-	irq1Address = (u32)irq1;
-	IDT[33].offset_lowerbits = irq1Address & 0xffff;
-	IDT[33].selector = 0x08; /* KERNEL_CODE_SEGMENT_OFFSET */
-	IDT[33].zero = 0;
-	IDT[33].type_attr = 0x8e; /* INTERRUPT_GATE */
-	IDT[33].offset_higherbits = (irq1Address & 0xffff0000) >> 16;
+	for (sz i = 32; i < 48; ++i)
+		initInterruptEntry(IDT[i], (u32)IRQ_TABLE[i - 32]);
 
-	irq2Address = (u32)irq2;
-	IDT[34].offset_lowerbits = irq2Address & 0xffff;
-	IDT[34].selector = 0x08; /* KERNEL_CODE_SEGMENT_OFFSET */
-	IDT[34].zero = 0;
-	IDT[34].type_attr = 0x8e; /* INTERRUPT_GATE */
-	IDT[34].offset_higherbits = (irq2Address & 0xffff0000) >> 16;
-
-	irq3Address = (u32)irq3;
-	IDT[35].offset_lowerbits = irq3Address & 0xffff;
-	IDT[35].selector = 0x08; /* KERNEL_CODE_SEGMENT_OFFSET */
-	IDT[35].zero = 0;
-	IDT[35].type_attr = 0x8e; /* INTERRUPT_GATE */
-	IDT[35].offset_higherbits = (irq3Address & 0xffff0000) >> 16;
-
-	irq4Address = (u32)irq4;
-	IDT[36].offset_lowerbits = irq4Address & 0xffff;
-	IDT[36].selector = 0x08; /* KERNEL_CODE_SEGMENT_OFFSET */
-	IDT[36].zero = 0;
-	IDT[36].type_attr = 0x8e; /* INTERRUPT_GATE */
-	IDT[36].offset_higherbits = (irq4Address & 0xffff0000) >> 16;
-
-	irq5Address = (u32)irq5;
-	IDT[37].offset_lowerbits = irq5Address & 0xffff;
-	IDT[37].selector = 0x08; /* KERNEL_CODE_SEGMENT_OFFSET */
-	IDT[37].zero = 0;
-	IDT[37].type_attr = 0x8e; /* INTERRUPT_GATE */
-	IDT[37].offset_higherbits = (irq5Address & 0xffff0000) >> 16;
-
-	irq6Address = (u32)irq6;
-	IDT[38].offset_lowerbits = irq6Address & 0xffff;
-	IDT[38].selector = 0x08; /* KERNEL_CODE_SEGMENT_OFFSET */
-	IDT[38].zero = 0;
-	IDT[38].type_attr = 0x8e; /* INTERRUPT_GATE */
-	IDT[38].offset_higherbits = (irq6Address & 0xffff0000) >> 16;
-
-	irq7Address = (u32)irq7;
-	IDT[39].offset_lowerbits = irq7Address & 0xffff;
-	IDT[39].selector = 0x08; /* KERNEL_CODE_SEGMENT_OFFSET */
-	IDT[39].zero = 0;
-	IDT[39].type_attr = 0x8e; /* INTERRUPT_GATE */
-	IDT[39].offset_higherbits = (irq7Address & 0xffff0000) >> 16;
-
-	irq8Address = (u32)irq8;
-	IDT[40].offset_lowerbits = irq8Address & 0xffff;
-	IDT[40].selector = 0x08; /* KERNEL_CODE_SEGMENT_OFFSET */
-	IDT[40].zero = 0;
-	IDT[40].type_attr = 0x8e; /* INTERRUPT_GATE */
-	IDT[40].offset_higherbits = (irq8Address & 0xffff0000) >> 16;
-
-	irq9Address = (u32)irq9;
-	IDT[41].offset_lowerbits = irq9Address & 0xffff;
-	IDT[41].selector = 0x08; /* KERNEL_CODE_SEGMENT_OFFSET */
-	IDT[41].zero = 0;
-	IDT[41].type_attr = 0x8e; /* INTERRUPT_GATE */
-	IDT[41].offset_higherbits = (irq9Address & 0xffff0000) >> 16;
-
-	irq10Address = (u32)irq10;
-	IDT[42].offset_lowerbits = irq10Address & 0xffff;
-	IDT[42].selector = 0x08; /* KERNEL_CODE_SEGMENT_OFFSET */
-	IDT[42].zero = 0;
-	IDT[42].type_attr = 0x8e; /* INTERRUPT_GATE */
-	IDT[42].offset_higherbits = (irq10Address & 0xffff0000) >> 16;
-
-	irq11Address = (u32)irq11;
-	IDT[43].offset_lowerbits = irq11Address & 0xffff;
-	IDT[43].selector = 0x08; /* KERNEL_CODE_SEGMENT_OFFSET */
-	IDT[43].zero = 0;
-	IDT[43].type_attr = 0x8e; /* INTERRUPT_GATE */
-	IDT[43].offset_higherbits = (irq11Address & 0xffff0000) >> 16;
-
-	irq12Address = (u32)irq12;
-	IDT[44].offset_lowerbits = irq12Address & 0xffff;
-	IDT[44].selector = 0x08; /* KERNEL_CODE_SEGMENT_OFFSET */
-	IDT[44].zero = 0;
-	IDT[44].type_attr = 0x8e; /* INTERRUPT_GATE */
-	IDT[44].offset_higherbits = (irq12Address & 0xffff0000) >> 16;
-
-	irq13Address = (u32)irq13;
-	IDT[45].offset_lowerbits = irq13Address & 0xffff;
-	IDT[45].selector = 0x08; /* KERNEL_CODE_SEGMENT_OFFSET */
-	IDT[45].zero = 0;
-	IDT[45].type_attr = 0x8e; /* INTERRUPT_GATE */
-	IDT[45].offset_higherbits = (irq13Address & 0xffff0000) >> 16;
-
-	irq14Address = (u32)irq14;
-	IDT[46].offset_lowerbits = irq14Address & 0xffff;
-	IDT[46].selector = 0x08; /* KERNEL_CODE_SEGMENT_OFFSET */
-	IDT[46].zero = 0;
-	IDT[46].type_attr = 0x8e; /* INTERRUPT_GATE */
-	IDT[46].offset_higherbits = (irq14Address & 0xffff0000) >> 16;
-
-	irq15Address = (u32)irq15;
-	IDT[47].offset_lowerbits = irq15Address & 0xffff;
-	IDT[47].selector = 0x08; /* KERNEL_CODE_SEGMENT_OFFSET */
-	IDT[47].zero = 0;
-	IDT[47].type_attr = 0x8e; /* INTERRUPT_GATE */
-	IDT[47].offset_higherbits = (irq15Address & 0xffff0000) >> 16;
-
-	/* fill the IDT descriptor */
-	idtAddress = (u32)IDT;
-	idtDescriptor[0] = (sizeof(struct IDT_entry) * 256) + ((idtAddress & 0xffff) << 16);
-	idtDescriptor[1] = idtAddress >> 16;
+	// Setup descriptor
+	const u32 IDT_ADDRESS = (u32)IDT;
+	idtDescriptor[0] = (sizeof(struct IDT_entry) * 256) + ((IDT_ADDRESS & 0xFFFF) << 16);
+	idtDescriptor[1] = IDT_ADDRESS >> 16;
 
 	// Load the IDT with the descriptor
 	loadIDT();
