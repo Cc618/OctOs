@@ -143,7 +143,6 @@ namespace key
 	}
 }
 
-
 // Internal functions //
 // Whether we can display the char
 // * Only for key pressed
@@ -176,8 +175,10 @@ void onKeyInterrupt()
 	if (_isDisplayable(k))
 		// TODO : Use safe function
 		std::putRawChar(key::DISPLAYABLE_PRESSED_MAP[(std::sz)k]);
-	if (k == pressed::ENTER)
+	else if (k == pressed::ENTER)
 		std::newLine();
+	else if (k == pressed::BACKSPACE)
+		std::rmChar();
 	else
 		// std::putRawByte(k)
 		;

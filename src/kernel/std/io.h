@@ -38,8 +38,10 @@ namespace std
 	void fillScreen(const byte FORMAT = DEFAULT_FORMAT);
 
 	// Printing //
-	// Make a new line
+	// Makes a new line
 	void newLine();
+	// Removes the last char if possible
+	void rmChar();
 
 	// TODO : Create putChar which handles special chars
 	// Puts a char at cursor position and updates the cursor
@@ -68,4 +70,8 @@ namespace std
 	// Moving
 	void setCursorPosition(const u16 x, const u16 y);
 	void moveCursor(const u16 OFFSET);
+
+	// Changes the minimum offset for user input
+	void setUserInputMinCursorPosition(const u16 x, const u16 y);
+	void setUserInputMinCursorOffset(const u16 OFFSET);
 } // namespace std

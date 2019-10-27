@@ -14,6 +14,9 @@ namespace std
 	// The offset from the origin of the cursor
 	u16 cursorOffset = 0;
 
+	// The minimal position of the cursor for user input
+	u16 userInputMinCursorOffset = 1;
+
 	// Internal Functions //
 	// Converts byte from 0 to 15 to hex char representation
 	char _rawWriteByteGetHex(const byte VALUE)
@@ -33,7 +36,7 @@ namespace std
 		if (cursorOffset >= VIDEO_MEMORY_CHAR_COUNT)
 		{
 			// TODO : Scroll
-			cursorOffset = 0;
+			cursorOffset = userInputMinCursorOffset = 0;
 
 			fillScreen();
 		}
@@ -59,6 +62,25 @@ namespace std
 		// Align cursor
 		cursorOffset += VIDEO_MEMORY_WIDTH;
 		cursorOffset -= cursorOffset % VIDEO_MEMORY_WIDTH;
+
+		// Update display
+		_updateCursorOffset();
+	}
+
+	void rmChar()
+	{
+		// Can't go back
+		if (cursorOffset <= userInputMinCursorOffset)
+		{
+			cursorOffset = userInputMinCursorOffset;
+			return;
+		}
+
+		// Go backwards
+		--cursorOffset;
+
+		// Delete previous char
+		((char*)VIDEO_MEMORY_START)[cursorOffset << 1] = 0;
 
 		// Update display
 		_updateCursorOffset();
@@ -176,5 +198,19 @@ namespace std
 		// Update cursor position
 		cursorOffset += OFFSET;
 		_updateCursorOffset();
+	}
+
+	void setUserInputMinCursorPosition(const u16 x, const u16 y)
+	{
+		setUserInputMinCursorOffset(x + y * VIDEO_MEMORY_WIDTH);
+	}
+
+	void setUserInputMinCursorOffset(const u16 OFFSET)
+	{
+		// Can't be outside of screen
+		if (OFFSET > VIDEO_MEMORY_CHAR_COUNT)
+			userInputMinCursorOffset = 0;
+
+		userInputMinCursorOffset = OFFSET;	
 	}
 } // namespace std

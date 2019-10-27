@@ -17,9 +17,11 @@ extern "C" void main()
 	// Hello display
 	rawWrite("Hello world!", 0);
 	rawWrite("OctOs 0.0.1", 80);
+	rawWrite("> ", 160);
 
 	// Reset cursor
-	setCursorPosition(0, 3);
+	setCursorPosition(2, 2);
+	setUserInputMinCursorPosition(2, 2);
 }
 
 
