@@ -27,13 +27,20 @@ namespace std
 		constexpr byte WHITE			= 15;
 	} // namespace col
 
+	// Default style format
+	// Yellow background, black font
+	constexpr byte DEFAULT_FORMAT = (col::YELLOW << 4) | (col::BLACK);
+
 
 	//// Display ////
 	// Screen //
 	// Fills the screen with format
-	void fillScreen(const byte FORMAT);
+	void fillScreen(const byte FORMAT = DEFAULT_FORMAT);
 
 	// Printing //
+	// Make a new line
+	void newLine();
+
 	// TODO : Create putChar which handles special chars
 	// Puts a char at cursor position and updates the cursor
 	// The char is not a special char (no check)

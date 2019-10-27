@@ -9,9 +9,7 @@ extern "C" void main()
 {
 	using namespace std;
 
-	// TODO : Theme
-	// Yellow background, black font
-	fillScreen(0xE0);
+	fillScreen();
 
 	// Interrupts
 	initInterrupts();

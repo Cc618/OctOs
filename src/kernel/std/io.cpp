@@ -7,6 +7,7 @@
 namespace std
 {
 	// Constants //
+	// Weight of the cursor
 	constexpr byte CURSOR_STYLE = 0x0D;
 
 	// Global variable //
@@ -24,8 +25,19 @@ namespace std
 	}
 
 	// Updates the cursor position
+	// If the cursor is outside of the screen, it will be remapped
+	// at the start of screen
 	void _updateCursorOffset()
 	{
+		// End of screen
+		if (cursorOffset >= VIDEO_MEMORY_CHAR_COUNT)
+		{
+			// TODO : Scroll
+			cursorOffset = 0;
+
+			fillScreen();
+		}
+
 		// High
 		outb(0x0E, port::VGA_SELECT);
 		outb((cursorOffset & 0xFF00) >> 8, port::VGA_DATA);
@@ -40,6 +52,16 @@ namespace std
 	{
 		for (sz i = VIDEO_MEMORY_START; i < VIDEO_MEMORY_END; i += 2)
 			*((u16*)i) = (u32)FORMAT << 8;
+	}
+
+	void newLine()
+	{
+		// Align cursor
+		cursorOffset += VIDEO_MEMORY_WIDTH;
+		cursorOffset -= cursorOffset % VIDEO_MEMORY_WIDTH;
+
+		// Update display
+		_updateCursorOffset();
 	}
 
 	void putRawChar(const char c)
@@ -63,7 +85,7 @@ namespace std
 	{
 		// Write
 		rawWriteByte(VALUE, cursorOffset);
-		
+
 		// Update cursor
 		cursorOffset += 2;
 		_updateCursorOffset();

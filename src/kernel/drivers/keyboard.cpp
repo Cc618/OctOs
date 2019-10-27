@@ -166,6 +166,8 @@ bool _isDisplayable(const char c)
 // Functions //
 void onKeyInterrupt()
 {
+	using namespace key;
+
 	const char k = inb(port::KEYBOARD);
 
 	// TODO : Controls (shift = upper case)
@@ -174,6 +176,8 @@ void onKeyInterrupt()
 	if (_isDisplayable(k))
 		// TODO : Use safe function
 		std::putRawChar(key::DISPLAYABLE_PRESSED_MAP[(std::sz)k]);
+	if (k == pressed::ENTER)
+		std::newLine();
 	else
 		// std::putRawByte(k)
 		;
