@@ -27,17 +27,17 @@ extern "C" void irq13();
 extern "C" void irq14();
 extern "C" void irq15();
 
-struct IDT_entry
+struct IDTEntry
 {
-	u16 offset_lowerbits;
+	u16 offsetLow;
 	u16 selector;
 	u8 zero;
-	u8 type_attr;
-	u16 offset_higherbits;
+	u8 flags;
+	u16 offsetHigh;
 } __attribute__((packed));
 
 // The IDT (256 entries)
-IDT_entry IDT[256];
+IDTEntry IDT[256];
 
 // Global variable which stores a pointer to the IDT descriptor
 u32 idtDescriptor[2];
@@ -71,16 +71,16 @@ inline void remapPIC()
 	outb(0x0, 0xA1);
 }
 
-void initInterruptEntry(IDT_entry& entry, const u32 IRQ_ADDRESS)
+void initInterruptEntry(IDTEntry& entry, const u32 IRQ_ADDRESS)
 {
 	constexpr u16 CODE_SEGMENT_OFFSET = 8;
 
-	entry.offset_lowerbits = IRQ_ADDRESS & 0xFFFF;
+	entry.offsetLow = IRQ_ADDRESS & 0xFFFF;
 	entry.selector = CODE_SEGMENT_OFFSET;
 	entry.zero = 0;
 	// Interrupt gate
-	entry.type_attr = 0x8E;
-	entry.offset_higherbits = (IRQ_ADDRESS & 0xFFFF0000) >> 16;
+	entry.flags = 0x8E;
+	entry.offsetHigh = (IRQ_ADDRESS & 0xFFFF0000) >> 16;
 }
 
 void initInterrupts()
@@ -113,7 +113,7 @@ void initInterrupts()
 
 	// Setup descriptor
 	const u32 IDT_ADDRESS = (u32)IDT;
-	idtDescriptor[0] = (sizeof(struct IDT_entry) * 256) + ((IDT_ADDRESS & 0xFFFF) << 16);
+	idtDescriptor[0] = (sizeof(struct IDTEntry) * 256) + ((IDT_ADDRESS & 0xFFFF) << 16);
 	idtDescriptor[1] = IDT_ADDRESS >> 16;
 
 	// Load the IDT with the descriptor
@@ -146,7 +146,7 @@ extern "C"
 	void irq1Handler()
 	{
 		// Dispatch
-		dispatchKey(inb(port::KEYBOARD));
+		onKeyInterrupt();
 
 		// Send acknowledgement
 		endOfInterrupt();
