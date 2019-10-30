@@ -49,7 +49,6 @@ namespace std
 	void putRawChar(const char c);
 	void putRawByte(const byte VALUE);
 
-
 	// TODO : Print numbers
 
 	// TODO : rm after other print methods
@@ -59,8 +58,6 @@ namespace std
 	void rawWriteByte(const byte VALUE, const sz OFFSET);
 	void rawWriteHex(const i32 VALUE, const sz OFFSET);
 	// void rawWriteInt(const i32 VALUE, const sz OFFSET);
-
-
 
 	// Cursor //
 	// Enabling / desabling
