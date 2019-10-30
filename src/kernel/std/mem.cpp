@@ -17,12 +17,15 @@ namespace std
 		// nullptr if first / last
 		AllocationBlockHeader *previous;
 		AllocationBlockHeader *next;
+
+		// Only to make this struct 16 bits aligned
+		sz padding;
 	} __attribute__((packed));
 
 	// Constants //
-	// Heap offsets
+	// Heap
 	constexpr sz HEAP_START = 0x100000;
-	constexpr sz HEAP_SIZE = 0x10000;
+	constexpr sz HEAP_SIZE = 0x100;
 	constexpr sz HEAP_END = HEAP_START + HEAP_SIZE;
 
 	// Variables //
@@ -30,53 +33,109 @@ namespace std
 	AllocationBlockHeader *lastBlock = nullptr;
 
 	// Functions //
-	void *alloc(const sz SIZE)
+	void *alloc(sz size)
 	{
-	
-		// TODO : Align SIZE to 32 bits
-
-		
+		// Align size to 32 bits
+		if (size % 32 != 0)
+			size += 32 - size % 32;
 
 		// The address where we can allocate memory
-		sz address;
+		AllocationBlockHeader *block = (AllocationBlockHeader*)HEAP_START;
 
-		// This is the first block to allocate
-		if (lastBlock == nullptr)
-			address = HEAP_START;
-		else
+		// This is not the first block to allocate
+		if (lastBlock != nullptr)
 		{
 			// Put the block after the last block
-			address = (sz)lastBlock + sizeof(AllocationBlockHeader) + lastBlock->size;
-		}
-		
-		// Test for size
-		if (address + sizeof(AllocationBlockHeader) + SIZE >= HEAP_END)
-		{
-			// TODO : Bad alloc
-			rawWrite("alloc: BAD ALLOC", 320);
-		}
+			sz ADDRESS = (sz)lastBlock + sizeof(AllocationBlockHeader) + lastBlock->size;
 
-		// TODO : Update previous block
-		// TODO : Find other block if no place
-		
+			// The size of the entire block (header + data) needed
+			const sz ALLOC_SIZE = sizeof(AllocationBlockHeader) + size;
 
-		// Create the block and set memory
-		AllocationBlockHeader *block = (AllocationBlockHeader*)address;
-		block->size = SIZE;
+			// Not enough space to allocate the data
+			if (ADDRESS + ALLOC_SIZE >= HEAP_END)
+			{
+				// Find other block from the first block
+				block = (AllocationBlockHeader*)HEAP_START;
+
+				// Find new address
+				while (true)
+				{
+					const sz FREE_SPACE = (sz)block->next - ((sz)block + sizeof(AllocationBlockHeader) + block->size);
+
+					// The empty space where we can allocate the block header and the data
+					// is big enough to allocate the data
+					if (FREE_SPACE >= ALLOC_SIZE)
+					{
+						// The block before the new block
+						AllocationBlockHeader *previous = block;
+
+						// Set the block address
+						block = (AllocationBlockHeader*)((sz)previous->next - FREE_SPACE);
+
+						// Link it with other blocks
+						previous->next->previous = block;
+						block->next = previous->next;
+						previous->next = block;
+
+						break;
+					}
+
+					// Change block
+					block = block->next;
+
+					// We have looped through all blocks, there is not enough space
+					if (block->next == nullptr)
+						fatalError(error::MEM_ALLOC);
+				}
+			}
+			else
+				block = (AllocationBlockHeader*)ADDRESS;
+		}
+		else
+			block->next = nullptr;
+
+		// Set memory
+		block->size = size;
 		block->previous = lastBlock;
-		block->next = nullptr;
 
-		// Update
+		// Update lastBlock
+		lastBlock->next = block;
 		lastBlock = block;
 
-
-
-
-		// rawWriteHex((i32)block, 160);
-
-
-
 		// Return a pointer to the data, not the header
-		return (void*)((byte*)block + sizeof(AllocationBlockHeader));
+		return (void*)((sz)block + sizeof(AllocationBlockHeader));
+	}
+
+	void dalloc(const void *data)
+	{
+
+		// Retrieve the block
+		AllocationBlockHeader *block = (AllocationBlockHeader*)((sz)data - sizeof(AllocationBlockHeader));
+
+		// Test validity
+		if (block->size == 0)
+			fatalError(error::MEM_DALLOC);
+
+		// Link previous and next block
+		AllocationBlockHeader *previous = block->previous;
+		AllocationBlockHeader *next = block->next;
+
+		// It's the last block
+		if (next == nullptr)
+		{
+			if (previous == nullptr)
+				lastBlock = (AllocationBlockHeader*)HEAP_START;
+			else
+				lastBlock = previous;
+		}
+		else
+			next->previous = previous;
+
+		if (previous != nullptr)
+			previous->next = next;
+
+		// TODO : Useless ?
+		// Set to free block of data
+		block->size = 0;
 	}
 } // namespace std

@@ -16,5 +16,9 @@ namespace std
 
 	// Functions //
 	// Allocates a block of data
-	void *alloc(const sz SIZE);
+	// Returns a pointer to the data
+	void *alloc(sz size);
+
+	// Deallocates a block of data
+	void dalloc(const void *data);
 } // namespace std

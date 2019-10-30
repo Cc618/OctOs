@@ -49,10 +49,11 @@ namespace std
 		fillScreen((col::BLUE << 4) | (col::WHITE));
 
 		// Display error
-		rawWrite("Fatal Error, system halt :", 0);
-		rawWrite(getErrorMsg(ERROR), VIDEO_MEMORY_WIDTH);
-		rawWrite("Error ID (hex) :", VIDEO_MEMORY_WIDTH * 3);
-		rawWriteHex((i32)ERROR, VIDEO_MEMORY_WIDTH * 4);
+		rawWrite("Fatal error - System halt.", 0);
+		rawWrite("Description :", VIDEO_MEMORY_WIDTH);
+		rawWrite(getErrorMsg(ERROR), VIDEO_MEMORY_WIDTH * 2);
+		rawWrite("ID (hex) :", VIDEO_MEMORY_WIDTH * 4);
+		rawWriteHex((i32)ERROR, VIDEO_MEMORY_WIDTH * 5);
 
 		// Halt
 		while (true);

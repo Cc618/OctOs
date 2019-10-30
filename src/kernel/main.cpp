@@ -5,6 +5,25 @@
 #include "drivers/ports.h"
 #include "drivers/interrupts.h"
 
+
+// Display value
+#define DBG(val) std::rawWrite(#val " :", dbgCursor); \
+	dbgCursor += 80 - dbgCursor % 80; \
+	std::rawWriteHex(val, dbgCursor); \
+	dbgCursor += 80 - dbgCursor % 80;
+
+
+static std::u32 dbgCursor = 0;
+
+void dbgHex(std::i32 v)
+{
+	std::rawWriteHex(v, dbgCursor);
+
+	dbgCursor -= dbgCursor % 80;
+	dbgCursor += 80;
+}
+
+
 // Entry point of the os
 extern "C" void main()
 {
@@ -29,11 +48,30 @@ extern "C" void main()
 
 
 	// Tests //
-	void *first = alloc(32);
-	void *second = alloc(64);
+	void *first = alloc(0x40);
+	void *second = alloc(0x40);
+	void *third = alloc(0x40);
 
-	rawWriteHex((i32)first, 0);
-	rawWriteHex((i32)second, 80);
+	dalloc(second);
+	void *fourth = alloc(0x40);
+
+	// sz block = (sz)first - 0x10,
+	// 	size = 0x40,
+	// 	headerSize = 0x10,
+	// 	next = (sz)third - headerSize;
+	// DBG((sz)next - ((sz)block + headerSize + size));
+
+
+
+	// TORM
+	// DBG((i32)second);
+	// DBG(*(i32*)((i32)second - 16));
+	// DBG((i32)third);
+	// DBG(*(i32*)((i32)third - 16 + 4));
+	// DBG(*(i32*)((i32)third - 16 + 8));
+
+	DBG((i32)second);
+	DBG((i32)fourth);
 }
 
 
