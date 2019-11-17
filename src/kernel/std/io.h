@@ -76,6 +76,8 @@ namespace std
 	// TODO : mk
 	// String getText(const u16 START, const u16 LENGTH);
 
+	// Prepares the caret to get inputs from the user
+	void beginUserInput();
 
 	// Cursor //
 	// Enabling / desabling

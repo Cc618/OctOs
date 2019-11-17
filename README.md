@@ -2,13 +2,16 @@
 An OS created in October. This OS is 32 bits, provides a heap and a command line interface.
 
 ![OctOs Thumbnail](screenshots/thumbnail.png "OctOs")
+![Commands](screenshots/cmd.png "Commands")
+![Error Handling](screenshots/error.png "Blue screen of death !")
 
 ## Features
 - Pure bootloader (no GRUB).
 - 32 bits, protected mode.
-- Custom standard library
-- (WIP) Command line interface.
-- (WIP) Heap.
+- Custom standard library.
+- Command line interface.
+- Heap.
+- (WIP) Error handling.
 - (WIP) Commands.
 
 ## Standard Library

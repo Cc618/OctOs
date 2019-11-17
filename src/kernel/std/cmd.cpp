@@ -27,6 +27,9 @@ namespace std
     void displayShellInput()
     {
         print("> ");
+
+        // Update caret properties
+        beginUserInput();
     }
 
 }

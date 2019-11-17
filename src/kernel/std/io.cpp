@@ -211,6 +211,14 @@ namespace std
 		rawWriteByte(VALUE & 0xFF, OFFSET + 6);
 	}
 
+	void beginUserInput()
+	{
+		userInputMinCursorOffset = cursorOffset;
+
+		// TODO : Useful ?
+		// enableCursor();
+	}
+
 	void enableCursor()
 	{
 		// Set address (index)

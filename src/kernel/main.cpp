@@ -50,11 +50,10 @@ extern "C" void main()
 	// TODO : Can't type without cursor
 	// disableCursor();
 
+	// String f = "First";
+	// String s = "Second";
 
-	String f = "First";
-	String s = "Second";
-
-	puts(f);
-	puts(s);
-	puts(f + s);
+	// puts(f);
+	// puts(s);
+	// puts(f + s);
 }
