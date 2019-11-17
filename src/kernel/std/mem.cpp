@@ -138,4 +138,33 @@ namespace std
 		// Set to free block of data
 		block->size = 0;
 	}
+
+	void cpy(const void *src, void *dst, const sz COUNT)
+	{
+		const byte *s = (const byte*)src;
+		byte *d = (byte*)dst;
+
+		for (sz i = 0; i < COUNT; ++i)
+		{
+			// Set
+			*d = *s;
+
+			// Next
+			++s;
+			++d;
+		}
+	}
+
+	sz strSize(cstr s)
+	{
+		// Save string
+		const cstr OLD_S = s;
+
+		// Find the end of the string
+		while (*s != '\0')
+			++s;
+
+		// Both are byte pointers so the distance unit is 1
+		return s - OLD_S;
+	}
 } // namespace std

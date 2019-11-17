@@ -21,4 +21,12 @@ namespace std
 
 	// Deallocates a block of data
 	void dalloc(const void *data);
+
+	// Copies a block of COUNT bytes from src to dst
+	void cpy(const void *src, void *dst, const sz COUNT);
+
+	// C Strings //
+	// Returns the size of a string
+	sz strSize(cstr s);
+
 } // namespace std
