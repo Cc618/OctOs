@@ -30,12 +30,17 @@ namespace std
 	// Default style format
 	// Yellow background, black font
 	constexpr byte DEFAULT_FORMAT = (col::YELLOW << 4) | (col::BLACK);
+	// Space with default format
+	constexpr u16 EMPTY_CHAR = (DEFAULT_FORMAT << 8) | ' ';
 
 
 	//// Display ////
 	// Screen //
 	// Fills the screen with format
 	void fillScreen(const byte FORMAT = DEFAULT_FORMAT);
+
+	// Scrolls the screen by one line verticaly
+	void scrollScreen();
 
 	// Printing //
 	// Makes a new line

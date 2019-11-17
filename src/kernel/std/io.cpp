@@ -34,12 +34,7 @@ namespace std
 	{
 		// End of screen
 		if (cursorOffset >= VIDEO_MEMORY_CHAR_COUNT)
-		{
-			// TODO : Scroll
-			cursorOffset = userInputMinCursorOffset = 0;
-
-			fillScreen();
-		}
+			scrollScreen();
 
 		// High
 		outb(0x0E, port::VGA_SELECT);
@@ -55,6 +50,24 @@ namespace std
 	{
 		for (sz i = VIDEO_MEMORY_START; i < VIDEO_MEMORY_END; i += 2)
 			*((u16*)i) = (u32)FORMAT << 8;
+	}
+
+	void scrollScreen()
+	{
+		// The amount of data to move
+		constexpr sz CHAR_PADDING = VIDEO_MEMORY_WIDTH;
+		constexpr sz BYTE_PADDING = CHAR_PADDING * 2;
+
+		// Update cursor
+		cursorOffset = userInputMinCursorOffset = VIDEO_MEMORY_CHAR_COUNT - CHAR_PADDING;
+
+		// Scroll screen
+		for (byte *i = (byte*)(VIDEO_MEMORY_START + BYTE_PADDING); i != (byte*)VIDEO_MEMORY_END; ++i)
+			*(i - BYTE_PADDING) = *i;
+		
+		// Fill the not filled part at the end 
+		for (u16 *j = (u16*)(VIDEO_MEMORY_END - BYTE_PADDING); j != (u16*)VIDEO_MEMORY_END; ++j)
+			*j = EMPTY_CHAR;
 	}
 
 	void newLine()
