@@ -114,13 +114,19 @@ namespace std
 		newLine();
 	}
 
+	// TODO : Other chars
 	void putChar(const char c)
 	{
-		// Line feed
-		if (c == '\n')
+		switch (c)
+		{
+		case '\n':
+			// Line feed
 			newLine();
-		
-		putRawChar(c);
+			break;
+
+		default:
+			putRawChar(c);
+		}
 	}
 
 	void putRawChar(const char c)

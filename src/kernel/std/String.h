@@ -31,7 +31,15 @@ namespace std
 
     public:
         // Operators //
+        // Set
         String &operator=(const String &OTHER);
+        
+        // Cast
+        operator cstr() const;
+
+        // Access
+        char operator[](const sz i) const;
+        char &operator[](const sz i);
 
     private:
         // Methods //

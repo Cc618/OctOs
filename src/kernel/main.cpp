@@ -2,6 +2,7 @@
 #include <std/err.h>
 #include <std/mem.h>
 #include <std/cmd.h>
+#include <std/String.h>
 
 #include "drivers/ports.h"
 #include "drivers/interrupts.h"
@@ -49,4 +50,13 @@ extern "C" void main()
 	// TODO : Can't type without cursor
 	// disableCursor();
 
+
+	String f = "First";
+	String s = f;
+
+	s[1] = '1';
+	s[0] = '!';
+
+	puts(f);
+	puts(s);
 }

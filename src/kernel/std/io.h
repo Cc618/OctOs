@@ -3,6 +3,7 @@
 // IO related functions
 
 #include <std/types.h>
+#include <std/String.h>
 
 namespace std
 {
@@ -54,7 +55,7 @@ namespace std
 	void puts(cstr s);
 	void putChar(const char c);
 	
-	// TODO : Create putChar which handles special chars
+
 	// Puts a char at cursor position and updates the cursor
 	// The char is not a special char (no check)
 	void putRawChar(const char c);
@@ -69,6 +70,12 @@ namespace std
 	void rawWriteByte(const byte VALUE, const sz OFFSET);
 	void rawWriteHex(const i32 VALUE, const sz OFFSET);
 	// void rawWriteInt(const i32 VALUE, const sz OFFSET);
+
+	// Input //
+	// Copies the text on screen in a string
+	// TODO : mk
+	// String getText(const u16 START, const u16 LENGTH);
+
 
 	// Cursor //
 	// Enabling / desabling

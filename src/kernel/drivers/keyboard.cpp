@@ -179,7 +179,6 @@ void onKeyInterrupt()
 		std::evalCommand();
 	else if (k == pressed::BACKSPACE)
 		std::rmChar();
-	else
-		// std::putRawByte(k)
-		;
+	// else // No touch conversion
+	// 	// std::putRawByte(k);
 }
