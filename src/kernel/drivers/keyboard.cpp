@@ -1,11 +1,11 @@
 #include "drivers/keyboard.h"
 
 #include <std/io.h>
+#include <std/cmd.h>
 
 #include "drivers/ports.h"
 
 // Constants //
-
 // Key constants
 namespace key
 {
@@ -176,7 +176,7 @@ void onKeyInterrupt()
 		// TODO : Use safe function
 		std::putRawChar(key::DISPLAYABLE_PRESSED_MAP[(std::sz)k]);
 	else if (k == pressed::ENTER)
-		std::newLine();
+		std::evalCommand();
 	else if (k == pressed::BACKSPACE)
 		std::rmChar();
 	else

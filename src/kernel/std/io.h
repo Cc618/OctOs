@@ -40,9 +40,15 @@ namespace std
 	// Printing //
 	// Makes a new line
 	void newLine();
+
 	// Removes the last char if possible
 	void rmChar();
 
+	// Print functions
+	void print(cstr s);
+	void puts(cstr s);
+	void putChar(const char c);
+	
 	// TODO : Create putChar which handles special chars
 	// Puts a char at cursor position and updates the cursor
 	// The char is not a special char (no check)

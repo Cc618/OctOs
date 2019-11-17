@@ -25,8 +25,8 @@ TOOL_ASM ?= nasm
 TOOL_PY ?= python3
 TOOL_DEBUG ?= gdb
 # Cross Compilers
-TOOL_CPP ?= /mnt/data/donnees/linux/logiciels/i386-elf-9.1.0/bin/i386-elf-g++
-TOOL_LINK ?= /mnt/data/donnees/linux/logiciels/i386-elf-9.1.0/bin/i386-elf-ld
+TOOL_CPP ?= /media/data/donnees/linux/logiciels/i386-elf-9.1.0/bin/i386-elf-g++
+TOOL_LINK ?= /media/data/donnees/linux/logiciels/i386-elf-9.1.0/bin/i386-elf-ld
 
 # Flags
 FLAG_ASM = -i src/boot

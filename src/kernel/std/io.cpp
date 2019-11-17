@@ -86,6 +86,30 @@ namespace std
 		_updateCursorOffset();
 	}
 
+	void print(cstr s)
+	{
+		while (*s != '\0')
+		{
+			putChar(*s);
+			++s;
+		}
+	}
+
+	void puts(cstr s)
+	{
+		print(s);
+		newLine();
+	}
+
+	void putChar(const char c)
+	{
+		// Line feed
+		if (c == '\n')
+			newLine();
+		
+		putRawChar(c);
+	}
+
 	void putRawChar(const char c)
 	{
 		// Get the address to write in memory

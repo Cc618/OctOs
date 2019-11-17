@@ -1,6 +1,7 @@
 #include <std/io.h>
 #include <std/err.h>
 #include <std/mem.h>
+#include <std/cmd.h>
 
 #include "drivers/ports.h"
 #include "drivers/interrupts.h"
@@ -34,44 +35,18 @@ extern "C" void main()
 	// Interrupts
 	initInterrupts();
 
-	// // Hello display
-	// rawWrite("Hello world!", 0);
-	// rawWrite("OctOs 0.0.1", 80);
-	// rawWrite("> ", 160);
+	// Hello display
+	puts("Hello world !");
+	puts("OctOs 0.0.1");
 
-	// // Reset cursor
-	// setCursorPosition(2, 2);
-	// setUserInputMinCursorPosition(2, 2);
+	// Prepare user input
+	displayShellInput();
+
+	// Reset cursor
+	setCursorPosition(2, 2);
+	setUserInputMinCursorPosition(2, 2);
 
 	// TODO : Can't type without cursor
-	disableCursor();
+	// disableCursor();
 
-
-	// Tests //
-	void *first = alloc(0x40);
-	void *second = alloc(0x40);
-	void *third = alloc(0x40);
-
-	dalloc(second);
-	void *fourth = alloc(0x40);
-
-	// sz block = (sz)first - 0x10,
-	// 	size = 0x40,
-	// 	headerSize = 0x10,
-	// 	next = (sz)third - headerSize;
-	// DBG((sz)next - ((sz)block + headerSize + size));
-
-
-
-	// TORM
-	// DBG((i32)second);
-	// DBG(*(i32*)((i32)second - 16));
-	// DBG((i32)third);
-	// DBG(*(i32*)((i32)third - 16 + 4));
-	// DBG(*(i32*)((i32)third - 16 + 8));
-
-	DBG((i32)second);
-	DBG((i32)fourth);
 }
-
-
