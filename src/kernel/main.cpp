@@ -52,11 +52,9 @@ extern "C" void main()
 
 
 	String f = "First";
-	String s = f;
-
-	s[1] = '1';
-	s[0] = '!';
+	String s = "Second";
 
 	puts(f);
 	puts(s);
+	puts(f + s);
 }

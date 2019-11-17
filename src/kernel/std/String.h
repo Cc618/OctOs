@@ -11,6 +11,7 @@ namespace std
     public:
         // Constructors //
         String();
+        String(const sz SIZE);
         String(cstr data);
         String(const String &OTHER);
         ~String();
@@ -33,7 +34,10 @@ namespace std
         // Operators //
         // Set
         String &operator=(const String &OTHER);
-        
+
+        // Concatenate
+        String operator+(const String &OTHER) const;
+
         // Cast
         operator cstr() const;
 
@@ -46,6 +50,7 @@ namespace std
         // Allocates the data of size _size
         // !!! Doesn't deallocate the old data
         void _allocData(cstr data);
+        void _allocData();
 
         // Deallocates the data
         void _dallocData();

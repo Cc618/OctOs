@@ -5,11 +5,16 @@
 
 namespace std
 {
-    // TODO : Allocate empty
     String::String()
         : _size(0)
     {
-        _allocData("");
+        _allocData();
+    }
+
+    String::String(const sz SIZE)
+        : _size(SIZE)
+    {
+        _allocData();
     }
 
     String::String(cstr data)
@@ -42,6 +47,19 @@ namespace std
 
         return *this;
     }
+    
+    String String::operator+(const String &OTHER) const
+    {
+        String s(_size + OTHER._size);
+
+        // Add this data (begin)
+        cpy(_data, s._data, _size);
+
+        // Add OTHER data (end)
+        cpy(OTHER._data, s._data + _size, OTHER._size);
+
+        return s;
+    }
 
     String::operator cstr() const
     {
@@ -69,10 +87,22 @@ namespace std
     void String::_allocData(cstr data)
     {
         // Allocates
-        _data = (str)alloc(_size);
+        _data = (str)alloc(_size + 1);
 
         // Copy
         cpy(data, _data, _size);
+
+        // Set end
+        _data[_size] = '\0';
+    }
+
+    void String::_allocData()
+    {
+        // Allocates
+        _data = (str)alloc(_size + 1);
+
+        // Set end
+        _data[_size] = '\0';
     }
 
     void String::_dallocData()
