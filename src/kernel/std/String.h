@@ -11,7 +11,7 @@ namespace std
     public:
         // Constructors //
         String();
-        String(const sz SIZE);
+        explicit String(const sz SIZE);
         String(cstr data);
         String(const String &OTHER);
         ~String();
@@ -44,6 +44,10 @@ namespace std
         // Access
         char operator[](const sz i) const;
         char &operator[](const sz i);
+
+        // Compare
+        bool operator==(const String &OTHER) const;
+        bool operator==(cstr OTHER) const;
 
     private:
         // Methods //

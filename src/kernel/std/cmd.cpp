@@ -12,7 +12,8 @@ namespace std
         // Separate user input to program output
         newLine();
 
-        print("Command entered !");
+        // Process command
+        processCommand(input());
 
         // Add a new line
         newLine();
@@ -26,10 +27,17 @@ namespace std
 
     void displayShellInput()
     {
+        // Header
         print("> ");
 
         // Update caret properties
         beginUserInput();
     }
 
+    void processCommand(const String &CMD)
+    {
+        print(String("+") + CMD + "+");
+        if (CMD == "hw")
+            print("Hello world !");
+    }
 }

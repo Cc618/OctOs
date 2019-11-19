@@ -17,8 +17,16 @@
 # Constants
 # To add debugging symbols
 DEBUG ?= 0
-DEBUG_GDB_ARGS ?= printf 'target remote localhost:1234\nsymbol-file tmp/kernel/kernel.sym\nb *main\n'
-# DEBUG_GDB_ARGS ?= printf 'target remote localhost:1234\nsymbol-file tmp/kernel/kernel.sym\nb *main\ncontinue\n'
+
+# Remove continue to debug before main
+DEBUG_GDB_ARGS ?= printf 'target remote localhost:1234\nsymbol-file tmp/kernel/kernel.sym\nb *main\ncontinue\n'
+
+# Either XTERM or GNOME
+TERMINAL ?= XTERM
+
+# Whether we want to open the console
+# to debug. Use 0 to open it manualy
+DEBUG_OPEN_CONSOLE ?= 1
 
 # Tools #
 TOOL_ASM ?= nasm
@@ -55,6 +63,8 @@ FILE_KERNEL = tmp/kernel/kernel
 ifeq ($(DEBUG), 1)
 FLAG_CPP += -ggdb
 FLAG_RUN += -s -S
+
+DEBUG_COMMAND_EXEC_GDB = cd $(PWD) && (($(DEBUG_GDB_ARGS); cat) | $(TOOL_DEBUG) bin/os); exec bash
 endif
 
 
@@ -68,11 +78,15 @@ bin/os: bin $(FILE_BOOT) $(FILE_KERNEL) $(FILE_BOOT_SUFFIX)
 
 run: bin/os
 ifeq ($(DEBUG), 1)
-	gnome-terminal . -- bash -c "cd $(PWD) && (($(DEBUG_GDB_ARGS); cat) | $(TOOL_DEBUG) bin/os); exec bash"
-	qemu-system-i386 $(FLAG_RUN)
-else
-	qemu-system-i386 $(FLAG_RUN)
+ifeq ($(DEBUG_OPEN_CONSOLE), 1)
+ifeq ($(TERMINAL), GNOME)
+	gnome-terminal . -- bash -c "$(DEBUG_COMMAND_EXEC_GDB)"
+else ifeq ($(TERMINAL), XTERM)
+	xterm -hold -e "$(DEBUG_COMMAND_EXEC_GDB)" &
 endif
+endif
+endif
+	qemu-system-i386 $(FLAG_RUN)
 
 # Boot #
 $(FILE_BOOT): tmp/boot $(SRC_BOOT) src/boot/constants.inc src/boot/gdt.inc

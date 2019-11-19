@@ -72,9 +72,12 @@ namespace std
 	// void rawWriteInt(const i32 VALUE, const sz OFFSET);
 
 	// Input //
-	// Copies the text on screen in a string
 	// TODO : mk
+	// Copies the text on screen in a string
 	// String getText(const u16 START, const u16 LENGTH);
+
+	// Returns the text between the start of the input and the caret
+	String input();
 
 	// Prepares the caret to get inputs from the user
 	void beginUserInput();
@@ -91,4 +94,8 @@ namespace std
 	// Changes the minimum offset for user input
 	void setUserInputMinCursorPosition(const u16 x, const u16 y);
 	void setUserInputMinCursorOffset(const u16 OFFSET);
+
+	// Globals //
+	class Stream;
+	extern Stream cout;
 } // namespace std

@@ -47,7 +47,7 @@ namespace std
 
         return *this;
     }
-    
+
     String String::operator+(const String &OTHER) const
     {
         String s(_size + OTHER._size);
@@ -71,7 +71,7 @@ namespace std
         // Buffer overflow
         if (i >= _size)
             fatalError(error::MEM_OVERFLOW);
-            
+
         return _data[i];
     }
 
@@ -80,9 +80,36 @@ namespace std
         // Buffer overflow
         if (i >= _size)
             fatalError(error::MEM_OVERFLOW);
-            
+
         return _data[i];
     }
+
+    bool String::operator==(const String &OTHER) const
+    {
+        // Check size
+        if (_size != OTHER._size)
+            return false;
+        
+        // Check content
+        for (sz i = 0; i < _size; ++i)
+            if (_data[i] != OTHER._data[i])
+                return false;
+        
+        // Same strings
+        return true;
+    }
+
+    bool String::operator==(cstr OTHER) const
+    {
+        // Check content
+        for (sz i = 0; i < _size; ++i)
+            if (_data[i] != OTHER[i])
+                return false;
+        
+        // Same strings
+        return true;
+    }
+
 
     void String::_allocData(cstr data)
     {

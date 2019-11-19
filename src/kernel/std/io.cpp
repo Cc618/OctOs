@@ -64,8 +64,8 @@ namespace std
 		// Scroll screen
 		for (byte *i = (byte*)(VIDEO_MEMORY_START + BYTE_PADDING); i != (byte*)VIDEO_MEMORY_END; ++i)
 			*(i - BYTE_PADDING) = *i;
-		
-		// Fill the not filled part at the end 
+
+		// Fill the not filled part at the end
 		for (u16 *j = (u16*)(VIDEO_MEMORY_END - BYTE_PADDING); j != (u16*)VIDEO_MEMORY_END; ++j)
 			*j = EMPTY_CHAR;
 	}
@@ -211,6 +211,20 @@ namespace std
 		rawWriteByte(VALUE & 0xFF, OFFSET + 6);
 	}
 
+	String input()
+	{
+		if (cursorOffset == userInputMinCursorOffset)
+			return "";
+
+		// Reserve data
+		String data(cursorOffset - userInputMinCursorOffset);
+
+		for (int i = userInputMinCursorOffset; i < cursorOffset; ++i)
+			data[i - userInputMinCursorOffset] = *(char*)(VIDEO_MEMORY_START + (i << 1));
+
+		return data;
+	}
+
 	void beginUserInput()
 	{
 		userInputMinCursorOffset = cursorOffset;
@@ -262,6 +276,6 @@ namespace std
 		if (OFFSET > VIDEO_MEMORY_CHAR_COUNT)
 			userInputMinCursorOffset = 0;
 
-		userInputMinCursorOffset = OFFSET;	
+		userInputMinCursorOffset = OFFSET;
 	}
 } // namespace std

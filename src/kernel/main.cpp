@@ -1,8 +1,10 @@
 #include <std/io.h>
 #include <std/err.h>
 #include <std/mem.h>
+#include <std/globals.h>
 #include <std/cmd.h>
 #include <std/String.h>
+#include <std/Stream.h>
 
 #include "drivers/ports.h"
 #include "drivers/interrupts.h"
@@ -31,10 +33,14 @@ extern "C" void main()
 {
 	using namespace std;
 
-	fillScreen();
-
 	// Interrupts
 	initInterrupts();
+
+	// Init global variables
+	initGlobals();
+
+	// Setup display
+	fillScreen();
 
 	// Hello display
 	puts("Hello world !");
@@ -50,10 +56,8 @@ extern "C" void main()
 	// TODO : Can't type without cursor
 	// disableCursor();
 
-	// String f = "First";
-	// String s = "Second";
 
-	// puts(f);
-	// puts(s);
-	// puts(f + s);
+	cout << "67 + (-89) = " << (67 + (-89));
+
+	// TODO : Fatal error when empty command
 }
