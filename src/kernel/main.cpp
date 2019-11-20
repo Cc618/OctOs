@@ -5,6 +5,7 @@
 #include <std/cmd.h>
 #include <std/String.h>
 #include <std/Stream.h>
+// #include <std/Array.h>
 
 #include "drivers/ports.h"
 #include "drivers/interrupts.h"
@@ -58,5 +59,10 @@ extern "C" void main()
 
 	// cout << "67 + (-89) = " << (67 + (-89));
 
-	// TODO : Fatal error when empty command
+	StringStream s = "str";
+
+	// Append 128 in its string representation to s
+	s << 128;
+
+	cout << s.data() << '\n';
 }

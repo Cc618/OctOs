@@ -3,17 +3,18 @@
 // Streams (only output)
 
 #include <std/types.h>
-#include <std/String.h>
 
 namespace std
 {
+    class String;
+
     // Classes //
     class Stream
     {
     public:
         // !!! Avoid using default constructor
         Stream();
-        Stream(void (*onStreamOutput)(const String &), void (*onStreamCharOutput)(const char));
+        Stream(void (*onStreamOutput)(Stream&, const String&), void (*onStreamCharOutput)(Stream&, const char));
 
     public:
         Stream &operator<<(const String &s);
@@ -24,7 +25,7 @@ namespace std
     private:
         // When << String called we use this wrapper
         // to avoid virtual functions
-        void (*_onStreamOutput)(const String&);
-        void (*_onStreamCharOutput)(const char);
+        void (*_onStreamOutput)(Stream&, const String&);
+        void (*_onStreamCharOutput)(Stream&, const char);
     };
 }

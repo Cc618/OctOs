@@ -3,6 +3,7 @@
 // String class
 
 #include <std/types.h>
+#include <std/Stream.h>
 
 namespace std
 {
@@ -16,9 +17,6 @@ namespace std
         String(const String &OTHER);
         ~String();
 
-    public:
-        // Methods //
-        
     public:
         // Getters //
         inline sz size() const
@@ -35,8 +33,12 @@ namespace std
         // Set
         String &operator=(const String &OTHER);
 
-        // Concatenate
+        // Concatenate (absolute)
         String operator+(const String &OTHER) const;
+
+        // Concatenate (relative)
+        String &operator+=(const String &OTHER);
+        String &operator+=(const char c);
 
         // Cast
         operator cstr() const;
@@ -63,5 +65,27 @@ namespace std
         // Attributes //
         str _data;
         sz _size;
+    };
+
+    class StringStream : public Stream
+    {
+    public:
+        StringStream();
+        StringStream(const String &DATA);
+        StringStream(const cstr DATA);
+
+    public:
+        // Retrieves the data
+        inline String data() const
+        {
+            return _data;
+        }
+
+    private:
+        static void printWrapper(Stream &t, const String &s);
+        static void putCharWrapper(Stream &t, const char c);
+
+    private:
+        String _data;
     };
 }

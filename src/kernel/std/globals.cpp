@@ -8,16 +8,15 @@ namespace std
     Stream cout;
 
     // Wrappers //
-    void coutPrint(const String &s)
+    void coutPrint(Stream &t __attribute__((unused)), const String &s)
     {
         print(s);
     }
 
-    void coutPutChar(const char c)
+    void coutPutChar(Stream &t __attribute__((unused)), const char c)
     {
         putChar(c);
     }
-
 
     // Functions //
     void initGlobals()

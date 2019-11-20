@@ -1,6 +1,7 @@
 #include "std/Stream.h"
 
 #include <std/io.h>
+#include <std/String.h>
 
 namespace std
 {
@@ -8,20 +9,20 @@ namespace std
         : _onStreamOutput(nullptr)
     {}
 
-    Stream::Stream(void (*onStreamOutput)(const String &), void (*onStreamCharOutput)(const char))
+    Stream::Stream(void (*onStreamOutput)(Stream&, const String &), void (*onStreamCharOutput)(Stream&, const char))
         : _onStreamOutput(onStreamOutput), _onStreamCharOutput(onStreamCharOutput)
     {}
 
     Stream &Stream::operator<<(const String &s)
     {
-        _onStreamOutput(s);
+        _onStreamOutput(*this, s);
 
         return *this;
     }
 
     Stream &Stream::operator<<(const char c)
     {
-        _onStreamCharOutput(c);
+        _onStreamCharOutput(*this, c);
 
         return *this;
     }
