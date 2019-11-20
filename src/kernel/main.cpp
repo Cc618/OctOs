@@ -5,7 +5,7 @@
 #include <std/cmd.h>
 #include <std/String.h>
 #include <std/Stream.h>
-// #include <std/Array.h>
+#include <std/Array.h>
 
 #include "drivers/ports.h"
 #include "drivers/interrupts.h"
@@ -57,12 +57,42 @@ extern "C" void main()
 	// TODO : Can't type without cursor
 	// disableCursor();
 
-	// cout << "67 + (-89) = " << (67 + (-89));
 
-	StringStream s = "str";
+	Array<int> a(5);
 
-	// Append 128 in its string representation to s
-	s << 128;
+	a[0] = 3;
+	a[1] = 1;
+	a[2] = 4;
+	a[3] = 1;
+	a[4] = 5;
 
-	cout << s.data() << '\n';
+
+	cout << "{ ";
+	cout << a[0];
+
+	// // Add comma separated numbers
+	// for (sz i = 1; i < 3; ++i)
+	// {
+	// 	cout << ", ";
+	// 	// cout << a[i];
+	// }
+
+	cout << a.getCount();
+
+	// cout << a[1] << a[2];
+	// cout << a[1];
+	
+	cout << " }";
+
+
+	// cout << out.str();
+
+
+
+
+
+
+
+	// TODO : String Stream << overload
+	// TODO : Array << overload
 }

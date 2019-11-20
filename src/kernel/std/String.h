@@ -76,7 +76,7 @@ namespace std
 
     public:
         // Retrieves the data
-        inline String data() const
+        inline String str() const
         {
             return _data;
         }

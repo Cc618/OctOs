@@ -107,7 +107,7 @@ namespace std
 		: _count(COUNT)
 	{
 		// Allocate
-		_data = new T[COUNT];
+		_data = (T*)alloc(sizeof(T) * COUNT);
 	}
 
 	template <typename T>
@@ -115,7 +115,7 @@ namespace std
 		: _count(COUNT)
 	{
 		// Allocate
-		_data = new T[COUNT];
+		_data = (T*)alloc(sizeof(T) * COUNT);
 
 		// Set the data
 		for (sz i = 0; i < COUNT; ++i)
@@ -126,7 +126,7 @@ namespace std
 	Array<T>::~Array()
 	{
 		// Free
-		delete[] _data;
+		dalloc(_data);
 	}
 
 
@@ -138,7 +138,7 @@ namespace std
 		if (COUNT == 0)
 		{
 			// Free
-			delete[] _data;
+			dalloc(_data);
 
 			_count = 0;
 			_data = nullptr;
@@ -150,7 +150,7 @@ namespace std
 		T *const oldData = _data;
 
 		// Allocate new data
-		_data = new T[COUNT];
+		_data = (T*)alloc(sizeof(T) *COUNT);
 
 		if (oldData)
 		{
@@ -158,7 +158,7 @@ namespace std
 			cpy(oldData, _data, sizeof(T) * min(_count, COUNT));
 
 			// Free old data
-			delete[] oldData;
+			dalloc(oldData);
 		}
 
 		// Update count
@@ -174,19 +174,17 @@ namespace std
 		if (!_data)
 			return "{}";
 
-		// TODO : Implememtation
 		// Use string stream for optimization
-		// std::ostringstream out;
-		// out << "{ " << std::to_string(_data[0]);
+		StringStream out("{ ");
+		out << _data[0];
 
-		// // Add comma separated numbers
-		// for (sz i = 1; i < _count; ++i)
-		// 	out << ", " << std::to_string(_data[i]);
+		// Add comma separated numbers
+		for (sz i = 1; i < _count; ++i)
+			out << ", " << _data[i];
 		
-		// out << " }";
+		out << " }";
 
-		// return out.str();
-		return "WIP";
+		return out.str();
 	}
 
 	template <typename T>
@@ -200,7 +198,7 @@ namespace std
 	Array<T> &Array<T>::operator=(const Array& OTHER)
 	{
 		// Free memory
-		delete[] _data;
+		dalloc(_data);
 
 		// Copy
 		_count = OTHER._count;
@@ -213,7 +211,7 @@ namespace std
 	T &Array<T>::operator[](const sz i)
 	{
 		// Error : The index is beyond limits
-		if (i >= count)
+		if (i >= _count)
 			fatalError(error::MEM_OVERFLOW);
 
 		return _data[i];
@@ -223,7 +221,7 @@ namespace std
 	T Array<T>::operator[](const sz i) const
 	{
 		// Error : The index is beyond limits
-		if (i >= count)
+		if (i >= _count)
 			fatalError(error::MEM_OVERFLOW);
 
 		return _data[i];
@@ -234,7 +232,7 @@ namespace std
 	void Array<T>::_copy(const Array& OTHER)
 	{
 		// Reallocate data
-		_data = new T[_count];
+		_data = (T*)alloc(sizeof(T) * _count);
 
 		// Copy data
 		cpy(OTHER._data, _data, sizeof(T) * _count);
