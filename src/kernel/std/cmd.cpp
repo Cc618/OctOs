@@ -6,6 +6,9 @@ namespace std
 {
     void evalCommand()
     {
+        // Save here the input
+        const String USER_INPUT = input();
+
         // Disable user input
         disableCursor();
 
@@ -13,7 +16,7 @@ namespace std
         newLine();
 
         // Process command
-        processCommand(input());
+        processCommand(USER_INPUT);
 
         // Add a new line
         newLine();
@@ -28,7 +31,7 @@ namespace std
     void displayShellInput()
     {
         // Header
-        print("> ");
+        cout << "> ";
 
         // Update caret properties
         beginUserInput();
@@ -36,8 +39,9 @@ namespace std
 
     void processCommand(const String &CMD)
     {
-        print(String("+") + CMD + "+");
         if (CMD == "hw")
             print("Hello world !");
+        else
+            print("Unknown command");
     }
 }

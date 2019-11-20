@@ -25,7 +25,7 @@ namespace std
 	// Constants //
 	// Heap
 	constexpr sz HEAP_START = 0x100000;
-	constexpr sz HEAP_SIZE = 0x100;
+	constexpr sz HEAP_SIZE = 0x100000;
 	constexpr sz HEAP_END = HEAP_START + HEAP_SIZE;
 
 	// Variables //

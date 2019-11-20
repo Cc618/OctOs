@@ -173,8 +173,7 @@ void onKeyInterrupt()
 
 	// Test for displayable key
 	if (_isDisplayable(k))
-		// TODO : Use safe function
-		std::putRawChar(key::DISPLAYABLE_PRESSED_MAP[(std::sz)k]);
+		std::putChar(key::DISPLAYABLE_PRESSED_MAP[(std::sz)k]);
 	else if (k == pressed::ENTER)
 		std::evalCommand();
 	else if (k == pressed::BACKSPACE)

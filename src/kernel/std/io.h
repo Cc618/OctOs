@@ -4,6 +4,7 @@
 
 #include <std/types.h>
 #include <std/String.h>
+#include <std/globals.h>
 
 namespace std
 {

@@ -28,6 +28,10 @@ namespace std
 
     Stream &Stream::operator<<(u32 n)
     {
+        // Avoid infinite loop
+        if (n == 0)
+            return *this << '0';
+
         // The 10 power just before 2 ^ 32
         u32 m = 1'000'000'000;
 

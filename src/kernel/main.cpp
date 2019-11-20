@@ -56,8 +56,7 @@ extern "C" void main()
 	// TODO : Can't type without cursor
 	// disableCursor();
 
-
-	cout << "67 + (-89) = " << (67 + (-89));
+	// cout << "67 + (-89) = " << (67 + (-89));
 
 	// TODO : Fatal error when empty command
 }

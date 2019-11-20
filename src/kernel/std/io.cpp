@@ -213,8 +213,9 @@ namespace std
 
 	String input()
 	{
+		// Empty output
 		if (cursorOffset == userInputMinCursorOffset)
-			return "";
+			return String();
 
 		// Reserve data
 		String data(cursorOffset - userInputMinCursorOffset);
