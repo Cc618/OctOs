@@ -69,6 +69,8 @@ namespace std
 
     class StringStream : public Stream
     {
+		friend Stream& operator<<(Stream&, const StringStream&);
+
     public:
         StringStream();
         StringStream(const String &DATA);

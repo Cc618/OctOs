@@ -33,25 +33,27 @@ namespace std
         if (n == 0)
             return *this << '0';
 
-        // The 10 power just before 2 ^ 32
-        u32 m = 1'000'000'000;
+        // The max power of 10 in 32 bits
+        u32 maxPower = 1'000'000'000;
 
-        // Skip padding
-        while (m >= n)
-            m /= 10;
+        // Make the max power just above n
+        // (remove useless 0s)
+        while (maxPower > n)
+            maxPower /= 10;
 
         do
         {
-            // Print as char
-            *this << (char)('0' + (n - n % m) / m);
+            // The last digit of n
+            const u32 DIGIT = n / maxPower;
 
-            // Remove the digit
-            n %= m;
+            // Output the digit
+            *this << (char)('0' + (char)DIGIT);
 
-            // Update m
-            m /= 10;
-        }
-        while (m != 0);
+            // Remove the last digit
+            n -= DIGIT * maxPower;
+
+            maxPower /= 10;
+        } while (maxPower != 0);
 
         return *this;
     }

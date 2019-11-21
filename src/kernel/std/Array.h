@@ -22,6 +22,10 @@ namespace std
 	template <typename T>
 	class Array
 	{
+		// Overload <<
+		template <typename C>
+		friend Stream& operator<<(Stream&, const Array<C>&);
+
 	public:
 		// Constructors //
 		// Data is null
@@ -56,12 +60,6 @@ namespace std
 		{
 			return _data;
 		}
-
-		// Returns the string version of the array (like in print but without the new line)
-		String toString() const;
-
-		// Prints the data
-		void print() const;
 
 	public:
 		// Operators //
@@ -165,34 +163,6 @@ namespace std
 		_count = COUNT;
 	}
 
-
-	// Getters //
-	template <typename T>
-	String Array<T>::toString() const
-	{
-		// Empty array
-		if (!_data)
-			return "{}";
-
-		// Use string stream for optimization
-		StringStream out("{ ");
-		out << _data[0];
-
-		// Add comma separated numbers
-		for (sz i = 1; i < _count; ++i)
-			out << ", " << _data[i];
-		
-		out << " }";
-
-		return out.str();
-	}
-
-	template <typename T>
-	void Array<T>::print() const
-	{
-		cout << toString() << '\n';
-	}
-
 	// Operators //
 	template <typename T>
 	Array<T> &Array<T>::operator=(const Array& OTHER)
@@ -239,12 +209,23 @@ namespace std
 	}
 
 	// Functions //
-	// TODO : Implementation
-	// template <typename T>
-	// std::ostream& operator<<(std::ostream& stream, const Array<T>& ARRAY)
-	// {
-	// 	stream << ARRAY.toString();
+	template <typename T>
+	Stream& operator<<(Stream& stream, const Array<T>& ARRAY)
+	{
+		// Empty array
+		if (!ARRAY._data)
+			return stream << "{}";
 
-	// 	return stream;
-	// }
+		// Use string stream for optimization
+		stream << "{ ";
+		stream << ARRAY._data[0];
+
+		// Add comma separated numbers
+		for (sz i = 1; i < ARRAY._count; ++i)
+			stream << ", " << ARRAY._data[i];
+		
+		stream << " }";
+
+		return stream;
+	}
 }

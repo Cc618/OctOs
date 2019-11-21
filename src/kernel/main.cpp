@@ -29,6 +29,58 @@ void dbgHex(std::i32 v)
 }
 
 
+
+
+
+
+// // TODO : mv Array.h
+// namespace std
+// {
+// 	template <typename T>
+// 	class Array
+// 	{
+// 	public:
+// 		explicit Array(const sz SIZE = 0)
+// 			: _size(SIZE)
+// 		{
+// 			_allocData();
+// 		}
+
+// 		// TODO : move...
+// 		~Array()
+// 		{
+// 			dalloc(_data);
+// 		}
+	
+// 	public:
+// 		T &operator[](const sz i)
+// 		{
+// 			// TODO : Verify
+// 			return _data[i];
+// 		}
+
+// 		T operator[](const sz i) const
+// 		{
+// 			// TODO : Verify
+// 			return _data[i];
+// 		}
+
+// 	private:
+// 		// Allocates the data of size _size
+// 		void _allocData()
+// 		{
+// 			_data = (T*)alloc(sizeof(T) * _size);
+// 		}
+
+// 	private:
+// 		sz _size;
+// 		T *_data;
+// 	};
+// } // namespace std
+
+
+
+
 // Entry point of the os
 extern "C" void main()
 {
@@ -58,6 +110,51 @@ extern "C" void main()
 	// disableCursor();
 
 
+
+
+
+
+
+
+	// sz n = 10;
+
+	// TODO : RM
+	// int *a = (int*)tmpAlloc(sizeof(int) * n);
+
+
+	// newLine();
+	// cout << (u32)(sizeof(int) * n);
+	// newLine();
+
+	// cout << (int)a << '\n';
+	// cout << *(a - 4) << '\n';
+	// cout << *(a - 3) << '\n';
+	// cout << *(a - 2) << '\n';
+	// cout << *(a - 1) << '\n';
+
+	// for (sz i = 0; i < n; ++i)
+	// 	a[i] = i + 10;
+
+	// for (sz i = 0; i < n; ++i)
+	// 	cout << a[i] << '\n';
+
+		// cout << *(int*)(sz)(a + i * 4) << '\n';
+
+
+	// a[0] = 3;
+	// a[1] = 1;
+	// a[2] = 4;
+	// a[3] = 1;
+	// a[4] = 5;
+
+
+	// for (sz i = 0; i < 5; ++i)
+	// {
+	// 	dbg(a, i);
+	// }
+
+
+
 	Array<int> a(5);
 
 	a[0] = 3;
@@ -67,32 +164,6 @@ extern "C" void main()
 	a[4] = 5;
 
 
-	cout << "{ ";
-	cout << a[0];
+	cout << a;
 
-	// // Add comma separated numbers
-	// for (sz i = 1; i < 3; ++i)
-	// {
-	// 	cout << ", ";
-	// 	// cout << a[i];
-	// }
-
-	cout << a.getCount();
-
-	// cout << a[1] << a[2];
-	// cout << a[1];
-	
-	cout << " }";
-
-
-	// cout << out.str();
-
-
-
-
-
-
-
-	// TODO : String Stream << overload
-	// TODO : Array << overload
 }

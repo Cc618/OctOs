@@ -214,4 +214,9 @@ namespace std
     {
         reinterpret_cast<StringStream*>(&t)->_data += c;
     }
+
+    Stream& operator<<(Stream& stream, const StringStream& STR)
+    {
+        return stream << STR._data;
+    }
 }
