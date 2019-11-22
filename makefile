@@ -19,7 +19,7 @@
 DEBUG ?= 0
 
 # Remove continue to debug before main
-DEBUG_GDB_ARGS ?= printf 'target remote localhost:1234\nsymbol-file tmp/kernel/kernel.sym\nb *main\nb *errorHandler\ncontinue\n'
+DEBUG_GDB_ARGS ?= printf 'target remote localhost:1234\nsymbol-file tmp/kernel/kernel.sym\nb *main\nb *errorHandler\ncontinue\ncontinue\n'
 
 # Either XTERM or GNOME
 TERMINAL ?= XTERM
@@ -38,7 +38,7 @@ TOOL_LINK ?= /media/data/donnees/linux/logiciels/i386-elf-9.1.0/bin/i386-elf-ld
 
 # Flags
 FLAG_ASM = -i src/boot
-FLAG_CPP = -Wall -Wextra -nostdinc -ffreestanding -nostdlib -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs -lgcc -lk -D__is_kernel -fno-exceptions -fno-rtti -m32 -I src/kernel -MMD
+FLAG_CPP = -Wall -Wextra -nostdinc -ffreestanding -nostdlib -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs -lgcc -lk -D__is_kernel -fno-exceptions -fno-rtti -m32 -I src/kernel -MMD -fno-use-cxa-atexit
 FLAG_LINK = -T linker.ld -e entry
 FLAG_RUN = -drive format=raw,if=floppy,index=0,file=bin/os
 

@@ -97,8 +97,11 @@ namespace std
 	Array<T>::Array(const sz COUNT)
 		: _size(COUNT)
 	{
-		// Allocate
-		_data = (T*)alloc(sizeof(T) * COUNT);
+		if (COUNT == 0)
+			_data = nullptr;
+		else
+			// Allocate
+			_data = (T*)alloc(sizeof(T) * COUNT);
 	}
 
 	template <typename T>
@@ -117,7 +120,8 @@ namespace std
 	Array<T>::~Array()
 	{
 		// Free
-		dalloc(_data);
+		if (_data != nullptr)
+			dalloc(_data);
 	}
 
 

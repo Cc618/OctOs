@@ -6,6 +6,7 @@
 #include <std/String.h>
 #include <std/Stream.h>
 #include <std/Array.h>
+#include <cmd/Command.h>
 
 #include "drivers/ports.h"
 #include "drivers/interrupts.h"
@@ -95,27 +96,26 @@ extern "C" void main()
 	// Setup display
 	fillScreen();
 
+	// Reset cursor
+	setCursorPosition(0, 0);
+
 	// Hello display
-	puts("Hello world !");
-	puts("OctOs 0.0.1");
+	puts("Welcome to OctOs 0.0.1");
 
 	// Prepare user input
 	displayShellInput();
 
-	// Reset cursor
-	setCursorPosition(2, 2);
-	setUserInputMinCursorPosition(2, 2);
 
 	// TODO : Can't type without cursor
 	// disableCursor();
 
 
+	// Array<String> args(1);
+	// args[0] = "-1";
 
-	String s = //"I am a command !";
-	"  I am   a command !   ";
+	// execCommand("hw"); //, args);
 
-	cout << s << '\n';
-
-	cout << s.split() << '\n';
-
+	// TODO : Error command not found
+	// TODO : Error command args
 }
+

@@ -108,7 +108,6 @@ namespace std
 
 	void dalloc(const void *data)
 	{
-
 		// Retrieve the block
 		AllocationBlockHeader *block = (AllocationBlockHeader*)((sz)data - sizeof(AllocationBlockHeader));
 

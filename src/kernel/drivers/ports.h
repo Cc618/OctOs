@@ -20,6 +20,7 @@ namespace port
 // Output byte to port
 // Defined in kernel.asm
 extern "C" void outb(std::byte value, std::u16 port);
+extern "C" void outw(std::u16 value, std::u16 port);
 
 // Receive byte from port
 // Defined in kernel.asm

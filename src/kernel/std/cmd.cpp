@@ -1,6 +1,9 @@
 #include "std/cmd.h"
 
 #include <std/io.h>
+#include <std/String.h>
+#include <std/Array.h>
+#include <cmd/Command.h>
 
 namespace std
 {
@@ -39,9 +42,11 @@ namespace std
 
     void processCommand(const String &CMD)
     {
-        if (CMD == "hw")
-            print("Hello world !");
-        else
-            print("Unknown command");
+        auto args = CMD.split(' ');
+
+        if (args.size() == 0)
+            return;
+
+        execCommand(args[0]);
     }
 }

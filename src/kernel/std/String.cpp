@@ -57,6 +57,9 @@ namespace std
 
     Array<String> String::split(const char SEP) const
     {
+        if (_size == 0)
+            return Array<String>();
+
         const sz WORD_COUNT = count(SEP) + 1;
 
         if (WORD_COUNT == 1)

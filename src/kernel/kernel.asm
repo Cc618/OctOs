@@ -57,6 +57,28 @@ outb:
 	ret
 
 
+; Outputs a word from a port
+; * See documentation in drivers/port.h
+global outw
+outw:
+	push ebp
+	mov ebp, esp
+
+	push ax
+	push dx
+
+	; dx = port, ax = value
+	mov dx, word [ebp + 12]
+	mov ax, word [ebp + 8]
+	out dx, ax
+
+	pop dx
+	pop ax
+
+	leave
+	ret
+
+
 ; Receives a byte from a port
 ; * See documentation in drivers/port.h
 global inb

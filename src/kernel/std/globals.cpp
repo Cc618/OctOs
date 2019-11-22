@@ -1,6 +1,7 @@
 #include "std/globals.h"
 
 #include <std/io.h>
+#include <cmd/Command.h>
 
 namespace std
 {
@@ -21,6 +22,12 @@ namespace std
     // Functions //
     void initGlobals()
     {
+        // std //
+        // io
         cout = Stream(coutPrint, coutPutChar);
+
+        // cmd //
+        // Command
+        Command::initCommands();
     }
 } // namespace std
