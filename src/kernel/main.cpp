@@ -51,7 +51,7 @@ void dbgHex(std::i32 v)
 // 		{
 // 			dalloc(_data);
 // 		}
-	
+
 // 	public:
 // 		T &operator[](const sz i)
 // 		{
@@ -111,59 +111,11 @@ extern "C" void main()
 
 
 
+	String s = //"I am a command !";
+	"  I am   a command !   ";
 
+	cout << s << '\n';
 
-
-
-
-	// sz n = 10;
-
-	// TODO : RM
-	// int *a = (int*)tmpAlloc(sizeof(int) * n);
-
-
-	// newLine();
-	// cout << (u32)(sizeof(int) * n);
-	// newLine();
-
-	// cout << (int)a << '\n';
-	// cout << *(a - 4) << '\n';
-	// cout << *(a - 3) << '\n';
-	// cout << *(a - 2) << '\n';
-	// cout << *(a - 1) << '\n';
-
-	// for (sz i = 0; i < n; ++i)
-	// 	a[i] = i + 10;
-
-	// for (sz i = 0; i < n; ++i)
-	// 	cout << a[i] << '\n';
-
-		// cout << *(int*)(sz)(a + i * 4) << '\n';
-
-
-	// a[0] = 3;
-	// a[1] = 1;
-	// a[2] = 4;
-	// a[3] = 1;
-	// a[4] = 5;
-
-
-	// for (sz i = 0; i < 5; ++i)
-	// {
-	// 	dbg(a, i);
-	// }
-
-
-
-	Array<int> a(5);
-
-	a[0] = 3;
-	a[1] = 1;
-	a[2] = 4;
-	a[3] = 1;
-	a[4] = 5;
-
-
-	cout << a;
+	cout << s.split() << '\n';
 
 }

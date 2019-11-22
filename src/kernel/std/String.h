@@ -7,6 +7,9 @@
 
 namespace std
 {
+    template <typename T>
+    class Array;
+
     class String
     {
     public:
@@ -14,8 +17,18 @@ namespace std
         String();
         explicit String(const sz SIZE);
         String(cstr data);
+        String(cstr data, const sz SIZE);
         String(const String &OTHER);
+        
         ~String();
+
+    public:
+        // Methods //
+        // Counts all occurences of the char c
+        sz count(const char c) const;
+
+        // Returns the splited string by the separator SEP
+        Array<String> split(const char SEP = ' ') const;
 
     public:
         // Getters //

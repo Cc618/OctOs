@@ -6,6 +6,11 @@
 // Print error function
 #define ERR_PRINT(s) std::rawWrite(s, 0)
 
+// To debug
+extern "C" void errorHandler(const std::error ERROR __attribute__((unused)))
+{
+}
+
 namespace std
 {
 	// All messages
@@ -54,6 +59,9 @@ namespace std
 		rawWrite(getErrorMsg(ERROR), VIDEO_MEMORY_WIDTH * 2);
 		rawWrite("ID (hex) :", VIDEO_MEMORY_WIDTH * 4);
 		rawWriteHex((i32)ERROR, VIDEO_MEMORY_WIDTH * 5);
+
+		// To debug
+		errorHandler(ERROR);
 
 		// Halt
 		while (true);

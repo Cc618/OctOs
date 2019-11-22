@@ -8,13 +8,6 @@
 #include <std/err.h>
 #include <std/algorithm.h>
 
-// #include <inttypes.h>
-// #include <iostream>
-// #include <string>
-// #include <sstream>
-// #include <cstring>
-// #include <cassert>
-
 // This class was initialy from my GitHub project Cc Collections : https://github.com/Cc618/Cc-Collections
 
 namespace std
@@ -50,13 +43,13 @@ namespace std
 	public:
 		// Getters //
 		// Returns the number of items
-		inline sz getCount() const
+		inline sz size() const
 		{
-			return _count;
+			return _size;
 		}
 
 		// Returns the raw data
-		inline const T *getData() const
+		inline const T *data() const
 		{
 			return _data;
 		}
@@ -83,26 +76,26 @@ namespace std
 		T *_data;
 
 		// Elements amount
-		sz _count;
+		sz _size;
 	};
 
 
 	// Constructors //
 	template <typename T>
 	Array<T>::Array()
-		: _data(nullptr), _count(0)
+		: _data(nullptr), _size(0)
 	{}
 
 	template <typename T>
 	Array<T>::Array(const Array& OTHER)
-		: _count(OTHER._count)
+		: _size(OTHER._size)
 	{
 		_copy(OTHER);
 	}
 
 	template <typename T>
 	Array<T>::Array(const sz COUNT)
-		: _count(COUNT)
+		: _size(COUNT)
 	{
 		// Allocate
 		_data = (T*)alloc(sizeof(T) * COUNT);
@@ -110,7 +103,7 @@ namespace std
 
 	template <typename T>
 	Array<T>::Array(const sz COUNT, const T& VALUE)
-		: _count(COUNT)
+		: _size(COUNT)
 	{
 		// Allocate
 		_data = (T*)alloc(sizeof(T) * COUNT);
@@ -138,7 +131,7 @@ namespace std
 			// Free
 			dalloc(_data);
 
-			_count = 0;
+			_size = 0;
 			_data = nullptr;
 			
 			return;
@@ -153,14 +146,14 @@ namespace std
 		if (oldData)
 		{
 			// Copy data
-			cpy(oldData, _data, sizeof(T) * min(_count, COUNT));
+			cpy(oldData, _data, sizeof(T) * min(_size, COUNT));
 
 			// Free old data
 			dalloc(oldData);
 		}
 
 		// Update count
-		_count = COUNT;
+		_size = COUNT;
 	}
 
 	// Operators //
@@ -171,7 +164,7 @@ namespace std
 		dalloc(_data);
 
 		// Copy
-		_count = OTHER._count;
+		_size = OTHER._size;
 		_copy(OTHER);
 
 		return *this;
@@ -181,7 +174,7 @@ namespace std
 	T &Array<T>::operator[](const sz i)
 	{
 		// Error : The index is beyond limits
-		if (i >= _count)
+		if (i >= _size)
 			fatalError(error::MEM_OVERFLOW);
 
 		return _data[i];
@@ -191,7 +184,7 @@ namespace std
 	T Array<T>::operator[](const sz i) const
 	{
 		// Error : The index is beyond limits
-		if (i >= _count)
+		if (i >= _size)
 			fatalError(error::MEM_OVERFLOW);
 
 		return _data[i];
@@ -202,10 +195,10 @@ namespace std
 	void Array<T>::_copy(const Array& OTHER)
 	{
 		// Reallocate data
-		_data = (T*)alloc(sizeof(T) * _count);
+		_data = (T*)alloc(sizeof(T) * _size);
 
 		// Copy data
-		cpy(OTHER._data, _data, sizeof(T) * _count);
+		cpy(OTHER._data, _data, sizeof(T) * _size);
 	}
 
 	// Functions //
@@ -221,7 +214,7 @@ namespace std
 		stream << ARRAY._data[0];
 
 		// Add comma separated numbers
-		for (sz i = 1; i < ARRAY._count; ++i)
+		for (sz i = 1; i < ARRAY._size; ++i)
 			stream << ", " << ARRAY._data[i];
 		
 		stream << " }";

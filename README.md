@@ -27,6 +27,7 @@ This os provides a custom standard library located in src/kernel/std, here is fi
 - src/boot : Boot source files (Assembly).
 - src/kernel : Kernel source files (C).
 - src/kernel/std : Standard library.
+- src/kernel/cmd : All command programs.
 
 ## Build
 Here is makefile commands. To build :

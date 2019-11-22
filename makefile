@@ -19,7 +19,7 @@
 DEBUG ?= 0
 
 # Remove continue to debug before main
-DEBUG_GDB_ARGS ?= printf 'target remote localhost:1234\nsymbol-file tmp/kernel/kernel.sym\nb *main\ncontinue\n'
+DEBUG_GDB_ARGS ?= printf 'target remote localhost:1234\nsymbol-file tmp/kernel/kernel.sym\nb *main\nb *errorHandler\ncontinue\n'
 
 # Either XTERM or GNOME
 TERMINAL ?= XTERM

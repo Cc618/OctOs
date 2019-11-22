@@ -2,6 +2,7 @@
 
 #include <std/mem.h>
 #include <std/err.h>
+#include <std/Array.h>
 
 namespace std
 {
@@ -24,6 +25,12 @@ namespace std
         _allocData(data);
     }
 
+    String::String(cstr data, const sz SIZE)
+        : _size(SIZE)
+    {
+        _allocData(data);
+    }
+
     String::String(const String &OTHER)
         : _size(OTHER._size)
     {
@@ -35,6 +42,67 @@ namespace std
     {
         // Free
         _dallocData();
+    }
+
+    sz String::count(const char c) const
+    {
+        sz count = 0;
+        for (sz i = 0; i < _size; ++i)
+            // Found
+            if (_data[i] == c)
+                ++count;
+        
+        return count;
+    }
+
+    Array<String> String::split(const char SEP) const
+    {
+        const sz WORD_COUNT = count(SEP) + 1;
+
+        if (WORD_COUNT == 1)
+        {
+            Array<String> array(1);
+            array[0] = String(*this);
+            return array;
+        }
+
+        // One word for each separator
+        Array<String> words(WORD_COUNT);
+
+        sz wordStart = 0,
+            wordId = 0;
+        for (sz i = 0; i < _size; ++i)
+            if (_data[i] == SEP)
+            {
+                // Add the word (without space)
+                words[wordId] = String(_data + wordStart, i - wordStart);
+
+                // Update id
+                ++wordId;
+
+                // Update word start
+                wordStart = i + 1;
+            }
+
+        // Append last word
+        words[wordId] = String(_data + wordStart, _size - wordStart);
+
+        // Remove empty words
+        Array<String> parsed(WORD_COUNT);
+        sz parsedWordCount = 0;
+
+        for (sz i = 0; i < words.size(); ++i)
+            // If not empty
+            if (words[i]._size != 0)
+            {
+                parsed[parsedWordCount] = String(words[i]);
+                ++parsedWordCount;
+            }
+
+        // Remove unitialized tail
+        parsed.resize(parsedWordCount);
+
+        return parsed;
     }
 
     String &String::operator=(const String &OTHER)
