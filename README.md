@@ -58,7 +58,7 @@ If the compilation fails, please make sure that you have a cross compiler (for i
 Here is some [documentation](https://wiki.osdev.org/GCC_Cross-Compiler "Build a cross compiler") about how to build a cross compiler. 
 
 ## Links
-Here are some usefull links :
+Here are some useful links :
 - [VGA reference](http://www.osdever.net/FreeVGA/vga/crtcreg.htm "VGA")
 - [Keycodes reference](http://www.vetra.com/scancodes.html "Keycodes")
 - [Linux Kernel](https://github.com/torvalds/linux "Linux")
